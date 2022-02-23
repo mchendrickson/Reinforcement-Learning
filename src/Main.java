@@ -1,13 +1,26 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class Main {
 	static Integer[][] boardFile;
 	public static void main(String[] args) throws FileNotFoundException {
-		System.out.println("Bazinga");
 
+
+		if(Objects.equals(args[0], "board.txt")) {
+			try {
+				File board = new File("C:\\Users\\Josh\\Documents\\CS4341Assignment4\\Boards\\board.txt");
+				BoardGenerator board1 = new BoardGenerator();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		int boardheight = 0;
+		int boardwidth = 0;
+		
 		String fileName = "C:\\Users\\Starkiller PC\\Desktop\\CS4341Assignment4\\sample.txt"; 
 		//float timeToRun = Float.parseFloat(args[1]);
 		//float probDesiredDirection = Float.parseFloat(args[2]);
