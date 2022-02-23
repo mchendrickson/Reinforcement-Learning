@@ -10,6 +10,8 @@ public class ReinforcementLearning {
 		this.constantReward = constantReward;
 		timer = new Timer(timeToRun);
 		timer.start();
+		
+		runReinforcement();
 	}
 	
 	public void runReinforcement() {
@@ -21,4 +23,5 @@ public class ReinforcementLearning {
 		while(!timer.finished());
 		
 	}
+	
 }
