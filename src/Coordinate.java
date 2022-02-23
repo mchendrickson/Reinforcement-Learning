@@ -21,6 +21,13 @@ public class Coordinate {
         this.downCost = downCost;
     }
 
+    public Coordinate(CoordinateType type, int xCoordinate, int yCoordinate, Integer value) {
+        this.type = type;
+        this.xCoordinate = xCoordinate;
+        this.yCoordinate = yCoordinate;
+        this.value = value;
+    }
+
     public CoordinateType getType() {
         return type;
     }
