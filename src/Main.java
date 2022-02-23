@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 public class Main {
 	static Integer[][] boardFile;
+	static int boardHeight, boardWidth;
 	public static void main(String[] args) throws FileNotFoundException {
 
 
@@ -18,8 +19,6 @@ public class Main {
 				e.printStackTrace();
 			}
 		}
-		int boardheight = 0;
-		int boardwidth = 0;
 		
 		String fileName = "C:\\Users\\Starkiller PC\\Desktop\\CS4341Assignment4\\sample.txt"; 
 		//float timeToRun = Float.parseFloat(args[1]);
@@ -39,10 +38,13 @@ public class Main {
 			String data = myReader.nextLine();
 			String[] boardRowStr = data.split("\\t");
 			Integer[] boardRow = new Integer[boardRowStr.length];
+			boardWidth = boardRowStr.length;
+
 			for(int i = 0;i < boardRowStr.length;i++)
 			{
 				boardRow[i] = Integer.parseInt(boardRowStr[i]);
 			}
+			boardHeight = rows.size();
 			rows.add(boardRow);
 			boardFile = new Integer[rows.size()][boardRow.length];
 			int i = 0;
@@ -50,6 +52,7 @@ public class Main {
 				boardFile[i] = row;
 				i++;
 			}
+			
 			
 		}
 		
