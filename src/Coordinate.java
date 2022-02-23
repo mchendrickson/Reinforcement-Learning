@@ -2,8 +2,8 @@ import java.util.Objects;
 
 public class Coordinate {
     CoordinateType type;
-    int xCoordinate;
-    int yCoordinate;
+    public int x;
+    public int y;
     Integer value;
     float upCost;
     float leftCost;
@@ -12,8 +12,8 @@ public class Coordinate {
 
     public Coordinate(CoordinateType type, int xCoordinate, int yCoordinate, Integer value, float upCost, float leftCost, float rightCost, float downCost) {
         this.type = type;
-        this.xCoordinate = xCoordinate;
-        this.yCoordinate = yCoordinate;
+        this.x = xCoordinate;
+        this.y = yCoordinate;
         this.value = value;
         this.upCost = upCost;
         this.leftCost = leftCost;
@@ -23,8 +23,8 @@ public class Coordinate {
 
     public Coordinate(CoordinateType type, int xCoordinate, int yCoordinate, Integer value) {
         this.type = type;
-        this.xCoordinate = xCoordinate;
-        this.yCoordinate = yCoordinate;
+        this.x = xCoordinate;
+        this.y = yCoordinate;
         this.value = value;
     }
 
@@ -33,11 +33,11 @@ public class Coordinate {
     }
 
     public int getxCoordinate() {
-        return xCoordinate;
+        return x;
     }
 
     public int getyCoordinate() {
-        return yCoordinate;
+        return y;
     }
 
     public Integer getValue() {
@@ -65,11 +65,11 @@ public class Coordinate {
     }
 
     public void setxCoordinate(int xCoordinate) {
-        this.xCoordinate = xCoordinate;
+        this.x = xCoordinate;
     }
 
     public void setyCoordinate(int yCoordinate) {
-        this.yCoordinate = yCoordinate;
+        this.y = yCoordinate;
     }
 
     public void setValue(Integer value) {
@@ -97,11 +97,11 @@ public class Coordinate {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Coordinate that = (Coordinate) o;
-        return xCoordinate == that.xCoordinate && yCoordinate == that.yCoordinate && Objects.equals(value, that.value);
+        return x == that.x && y == that.y && Objects.equals(value, that.value);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(xCoordinate, yCoordinate, value);
+        return Objects.hash(x, y, value);
     }
 }

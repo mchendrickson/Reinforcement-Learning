@@ -11,6 +11,7 @@ public class Main {
 	public static void main(String[] args) throws FileNotFoundException {
 
 
+		/*
 		if(Objects.equals(args[0], "board.txt")) {
 			try {
 				File board = new File("C:\\Users\\Josh\\Documents\\CS4341Assignment4\\Boards\\board.txt");
@@ -19,8 +20,10 @@ public class Main {
 				e.printStackTrace();
 			}
 		}
+		*/
 		
-		String fileName = "C:\\Users\\Josh\\Documents\\CS4341Assignment4\\Boards\\sample.txt";
+		String fileName = "C:\\Users\\Star Killer\\eclipse-workspace\\CS4341Assignment4\\sample.txt";
+		
 		//float timeToRun = Float.parseFloat(args[1]);
 		//float probDesiredDirection = Float.parseFloat(args[2]);
 		//float constantReward = Float.parseFloat(args[3]);
@@ -64,7 +67,7 @@ public class Main {
 	private static void printBoard(Integer[][] boardFile) {
 		for(int i = 0; i < boardFile.length; i++) {
 			for(int j = 0; j < boardFile[i].length; j++) {
-				System.out.print(boardFile[i][j] + ", ");
+				System.out.print(boardFile[i][j] + "	");
 			}
 			System.out.println();
 		}
