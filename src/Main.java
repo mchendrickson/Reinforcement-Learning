@@ -20,12 +20,13 @@ public class Main {
 			}
 		}
 		
-		String fileName = "C:\\Users\\Starkiller PC\\Desktop\\CS4341Assignment4\\sample.txt"; 
+		String fileName = "C:\\Users\\Josh\\Documents\\CS4341Assignment4\\Boards\\sample.txt";
 		//float timeToRun = Float.parseFloat(args[1]);
 		//float probDesiredDirection = Float.parseFloat(args[2]);
 		//float constantReward = Float.parseFloat(args[3]);
 		openFile(fileName);
 		printBoard(boardFile);
+		Board b = new Board(boardHeight,boardWidth,boardFile);
 		
 		
 	}

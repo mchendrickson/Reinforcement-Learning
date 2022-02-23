@@ -8,4 +8,11 @@ public class Board {
         this.width = width;
         this.board = new Integer[height][width];
     }
+
+    public Board(int height, int width, Integer[][] board) {
+        this.height = height;
+        this.width = width;
+        this.board = board;
+    }
+
 }
