@@ -27,8 +27,6 @@ public class ReinforcementLearning {
 			Integer initCordValue = board.boardInt[randomXCoordinate][randomYCoordinate];
 			Coordinate currentCoordinate = new Coordinate(CoordinateType.CURRENT, randomXCoordinate,randomYCoordinate,initCordValue);
 			learn(currentCoordinate);
-			
-		
 		}
 		while(!timer.finished());
 		
