@@ -1,9 +1,11 @@
 import java.awt.Point;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class ReinforcementLearning {
 	private Board board;
 	private Timer timer;
 	private float timeToRun, probDesiredDirection, constantReward;
+
 	public ReinforcementLearning(Board board, float timeToRun, float probDesiredDirection, float constantReward) {
 		this.board = board;
 		this.timeToRun = timeToRun;
@@ -18,11 +20,28 @@ public class ReinforcementLearning {
 	public void runReinforcement() {
 		
 		do {
+			int randomXCoordinate = ThreadLocalRandom.current().nextInt(0, board.width);
+			int randomYCoordinate = ThreadLocalRandom.current().nextInt(0, board.height);
+			Integer initCordValue = board.boardInt[randomXCoordinate][randomYCoordinate];
+			Coordinate currentCoordinate = new Coordinate(CoordinateType.CURRENT, randomXCoordinate,randomYCoordinate,initCordValue);
+			learn(currentCoordinate);
 			
 		
 		}
 		while(!timer.finished());
 		
+	}
+
+	public void learn(Coordinate current){
+		//check if on terminal state
+		for(Coordinate c: board.terminalStates){
+			if(current.equals(c)){
+				return;
+			}
+		}
+		calculateCoordinateValue(current);
+
+
 	}
 	
 	private float calculateCoordinateValue(Coordinate currCoord) {
