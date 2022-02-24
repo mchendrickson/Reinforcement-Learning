@@ -35,17 +35,55 @@ public class ReinforcementLearning {
 	}
 
 	public void learn(Coordinate currCoord){
-		//check if on terminal state
-		for(Coordinate c: board.terminalStates){
+		for(Coordinate c: board.terminalStates){ //check if on terminal state
 			if(currCoord.equals(c)){
-				return;
+				return; //return if terminal
 			}
 		}
-		
-		Direction dir = calculateBestDirection(currCoord);
-		
+		Direction dir = calculateBestDirection(currCoord); // if not, make move
 
+		//todo - each float is saved in the currCoordinate
+		//todo - iterate through the currCoordinate and find the qMAX float value and update in table
+		//todo - save new qMax float in table?
 
+		switch(dir){
+			case UP:
+				if(currCoord.y == 0){ // check if at top bound
+					learn(currCoord);
+					break;
+				}
+				else{
+					learn(new Coordinate(currCoord.type, currCoord.x, currCoord.y - 1, board.board[currCoord.x-1][currCoord.y].value));
+				}
+				break;
+			case DOWN:
+				if(currCoord.y == board.height){ // check if at bottom bound
+					learn(currCoord);
+					break;
+				}
+				else{
+					learn(new Coordinate(currCoord.type, currCoord.x, currCoord.y + 1, board.board[currCoord.x-1][currCoord.y].value));
+				}
+				break;
+			case LEFT:
+				if(currCoord.x == 0){ // check if at left bound
+					learn(currCoord);
+					break;
+				}
+				else{
+					learn(new Coordinate(currCoord.type, currCoord.x - 1, currCoord.y, board.board[currCoord.x-1][currCoord.y].value));
+				}
+				break;
+			case RIGHT:
+				if(currCoord.x == 0){ // check if at right bound
+					learn(currCoord);
+					break;
+				}
+				else{
+					learn(new Coordinate(currCoord.type, currCoord.x + 1, currCoord.y, board.board[currCoord.x-1][currCoord.y].value));
+				}
+				break;
+		}
 	}
 	
 	//Calculate which direction is the best direction to travel in
@@ -86,8 +124,8 @@ public class ReinforcementLearning {
 		
 		//Math.random() generates a value between 0.0 and 1.0, if that number is lower than sigmaPercent, we move in a random direction (exploration)
 		if(Math.random() <= sigmaPercent) {
-			int i = rand.nextInt(0,4);
-			
+			int i = ThreadLocalRandom.current().nextInt(0, 4);
+
 			//Move in a random direction
 			switch(i) {
 			case 0:
@@ -185,10 +223,27 @@ public class ReinforcementLearning {
 			rightValMult = probDesiredDirection;
 			break;
 		}
-		
+
+
 		//Calculate the total value
 		double totalValue = (topVal * topValMult) + (bottomVal * bottomValMult) + (rightVal * rightValMult) + (leftVal * leftValMult);
-		
+		float returnValue = (float)(totalValue + constantReward);
+
+		switch(dir){
+			case UP:
+				currCoord.upCost = returnValue;
+				break;
+			case DOWN:
+				currCoord.downCost = returnValue;
+				break;
+			case LEFT:
+				currCoord.leftCost = returnValue;
+				break;
+			case RIGHT:
+				currCoord.rightCost = returnValue;
+				break;
+		}
+
 		//return the value + the cost of moving
 		return (float)(totalValue + constantReward);
 	}
