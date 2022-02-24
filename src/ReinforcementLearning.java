@@ -1,16 +1,18 @@
 import java.awt.Point;
+import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class ReinforcementLearning {
 	private Board board;
 	private Timer timer;
-	private float timeToRun, probDesiredDirection, constantReward;
+	private float timeToRun, probDesiredDirection, constantReward, sigmaPercent;
 
-	public ReinforcementLearning(Board board, float timeToRun, float probDesiredDirection, float constantReward) {
+	public ReinforcementLearning(Board board, float timeToRun, float probDesiredDirection, float constantReward, float sigmaPercent) {
 		this.board = board;
 		this.timeToRun = timeToRun;
 		this.probDesiredDirection = probDesiredDirection;
 		this.constantReward = constantReward;
+		this.sigmaPercent = sigmaPercent;
 		timer = new Timer(timeToRun);
 		timer.start();
 		
@@ -32,47 +34,157 @@ public class ReinforcementLearning {
 		
 	}
 
-	public void learn(Coordinate current){
+	public void learn(Coordinate currCoord){
 		//check if on terminal state
 		for(Coordinate c: board.terminalStates){
-			if(current.equals(c)){
+			if(currCoord.equals(c)){
 				return;
 			}
 		}
-		calculateCoordinateValue(current);
+		
+		Direction dir = calculateBestDirection(currCoord);
+		
 
 
 	}
 	
-	private float calculateCoordinateValue(Coordinate currCoord) {
+	private Direction calculateBestDirection(Coordinate currCoord) {
+	
+		Direction bestDir = null;
+		float highestValue = Float.MIN_VALUE;
+		Direction dir = null;
+		for(int i = 0; i <= 3; i++) {
+			
+			switch(i) {
+			case 0:
+				dir = Direction.UP;
+				break;
+			case 1:
+				dir = Direction.DOWN;
+				break;
+			case 2:
+				dir = Direction.RIGHT;
+				break;
+			case 3:
+				dir = Direction.LEFT;
+				break;
+			}
+			
+			float currValue = calculateCoordinateValue(currCoord, dir);
+			
+			if(currValue > highestValue) {
+				highestValue = currValue;
+				bestDir = dir;
+			}
+		}
+		
+		//If the random value is high enough, just go in any random direction
+		Random rand = new Random();
+		if(Math.random() <= sigmaPercent) {
+			int i = rand.nextInt(0,4);
+			
+			switch(i) {
+			case 0:
+				bestDir = Direction.UP;
+				break;
+			case 1:
+				bestDir = Direction.DOWN;
+				break;
+			case 2:
+				bestDir = Direction.RIGHT;
+				break;
+			case 3:
+				bestDir = Direction.LEFT;
+				break;
+			}				
+		}
+		
+		return bestDir;
+		
+	}
+	
+	
+	private float calculateCoordinateValue(Coordinate currCoord, Direction dir) {
+		
+		//Initialize points
 		Point top, bottom, left, right;
 		top = new Point(currCoord.x, currCoord.y + 1);
 		bottom = new Point(currCoord.x, currCoord.y - 1);
 		left = new Point(currCoord.x - 1, currCoord.y);
 		right = new Point(currCoord.x + 1, currCoord.y);
 		
-		float topVal = constantReward; 
-		float bottomVal = constantReward;
-		float leftVal = constantReward;
-		float rightVal = constantReward;
+		//Total value of the coordinate locations
+		float topVal = 0; 
+		float bottomVal = 0;
+		float leftVal = 0;
+		float rightVal = 0;
 		
+		//Multipliers based on what direction we want to travel
+		double topValMult = 0; 
+		double bottomValMult = 0;
+		double leftValMult = 0;
+		double rightValMult = 0;
+		
+		//Get the value of the coordinate on the board. If it doesn't exist, simply return the cost to bounce back (the constant reward)
 		if(top.y <= board.height) {
 			topVal = board.getBoard()[top.x][top.y].getValue();
+		}else {
+			topVal = constantReward;
 		}
 		
 		if(bottom.y >= 0) {
 			bottomVal = board.getBoard()[bottom.x][bottom.y].getValue();
+		}else {
+			bottomVal = constantReward;
 		}
 		
 		if(left.x >= 0) {
 			leftVal = board.getBoard()[left.x][left.y].getValue();
+		}else {
+			leftVal = constantReward;
 		}
 		
 		if(right.x <= board.width) {
 			rightVal = board.getBoard()[right.x][right.y].getValue();
+		}else {
+			rightVal = constantReward;
 		}
 		
-		return topVal + bottomVal + leftVal + rightVal + constantReward;
+		
+		//Assign multiplication weights based on what direction we travel. (It is impossible to travel backwards)
+		switch(dir) {
+		
+		case UP:
+			topValMult = probDesiredDirection;
+			bottomValMult = 0;
+			leftValMult = (1.0 - probDesiredDirection) / 2;
+			rightValMult = (1.0 - probDesiredDirection) / 2;
+			break;
+		case DOWN:
+			topValMult = 0;
+			bottomValMult = probDesiredDirection;
+			leftValMult = (1.0 - probDesiredDirection) / 2;
+			rightValMult = (1.0 - probDesiredDirection) / 2;
+			break;
+		case LEFT:
+			topValMult = (1.0 - probDesiredDirection) / 2;
+			bottomValMult = (1.0 - probDesiredDirection) / 2;
+			leftValMult = probDesiredDirection;
+			rightValMult = 0;
+			break;
+		case RIGHT:
+			topValMult = (1.0 - probDesiredDirection) / 2;
+			bottomValMult = (1.0 - probDesiredDirection) / 2;
+			leftValMult = 0;
+			rightValMult = probDesiredDirection;
+			break;
+		}
+		
+		//Calculate the total value
+		double totalValue = (topVal * topValMult) + (bottomVal * bottomValMult) + (rightVal * rightValMult) + (leftVal * leftValMult);
+		
+		//return the value + the cost of moving
+		return (float)(totalValue + constantReward);
 	}
 	
 }
