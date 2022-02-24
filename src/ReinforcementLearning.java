@@ -48,11 +48,14 @@ public class ReinforcementLearning {
 
 	}
 	
+	//Calculate which direction is the best direction to travel in
 	private Direction calculateBestDirection(Coordinate currCoord) {
 	
 		Direction bestDir = null;
 		float highestValue = Float.MIN_VALUE;
 		Direction dir = null;
+		
+		//Calculate for each direction
 		for(int i = 0; i <= 3; i++) {
 			
 			switch(i) {
@@ -70,7 +73,7 @@ public class ReinforcementLearning {
 				break;
 			}
 			
-			float currValue = calculateCoordinateValue(currCoord, dir);
+			float currValue = calculateCoordinateValue(currCoord, dir); //Get the value of the specific direction
 			
 			if(currValue > highestValue) {
 				highestValue = currValue;
@@ -80,9 +83,12 @@ public class ReinforcementLearning {
 		
 		//If the random value is high enough, just go in any random direction
 		Random rand = new Random();
+		
+		//Math.random() generates a value between 0.0 and 1.0, if that number is lower than sigmaPercent, we move in a random direction (exploration)
 		if(Math.random() <= sigmaPercent) {
 			int i = rand.nextInt(0,4);
 			
+			//Move in a random direction
 			switch(i) {
 			case 0:
 				bestDir = Direction.UP;

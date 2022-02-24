@@ -27,11 +27,17 @@ public class Main {
 		//float timeToRun = Float.parseFloat(args[1]);
 		//float probDesiredDirection = Float.parseFloat(args[2]);
 		//float constantReward = Float.parseFloat(args[3]);
+		
+		float timeToRun = 10;
+		float probDesiredDirection = 0.8f;
+		float constantReward = -0.05f;
+		float sigmaPercent = 0.1f;
+		
 		openFile(fileName);
-		printBoard(boardFile);
+		//printBoard(boardFile);
 		Board b = new Board(boardHeight,boardWidth,boardFile);
 		
-		
+		ReinforcementLearning learning = new ReinforcementLearning(b, timeToRun, probDesiredDirection, constantReward, sigmaPercent);
 	}
 	
 	

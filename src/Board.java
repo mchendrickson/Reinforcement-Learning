@@ -29,9 +29,11 @@ public class Board {
     }
 
     private void initializeBoard() {
-        for (int i = 0; i < height; i++) {
+        terminalStates = new ArrayList<Coordinate>();
+    	for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                 int boardVal = boardInt[i][j];
+                System.out.print(boardVal + " 	");
                 CoordinateType type;
                 if (boardVal >= 1) {
                     type = CoordinateType.TERMINAL;
@@ -41,6 +43,7 @@ public class Board {
                 }
                 board[i][j] = new Coordinate(type, i, j, boardInt[i][j]);
             }
+            System.out.println();
         }
     }
 
