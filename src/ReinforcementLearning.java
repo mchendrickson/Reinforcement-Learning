@@ -1,10 +1,11 @@
 import java.awt.Point;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
-
+import java.util.HashMap;
 public class ReinforcementLearning {
 	private Board board;
 	private Timer timer;
+	private HashMap<int[],float[]> qTable =  new HashMap<int[],float[]>();
 	private float timeToRun, probDesiredDirection, constantReward, sigmaPercent;
 
 	public ReinforcementLearning(Board board, float timeToRun, float probDesiredDirection, float constantReward, float sigmaPercent) {
@@ -31,7 +32,33 @@ public class ReinforcementLearning {
 		while(!timer.finished());
 		
 	}
+	private void updateQtable(Coordinate currCoord, Direction dir){
+		int []key = {currCoord.x, currCoord.y};
+		float []values = qTable.get(key);
+		switch(dir){
+			case UP:
+				values[0] = currCoord.getUpCost();
+				qTable.put(key,values);
+				break;
 
+			case LEFT:
+				values[1] = currCoord.getLeftCost();
+				qTable.put(key,values);
+				break;
+
+			case RIGHT:
+				values[2] = currCoord.getRightCost();
+				qTable.put(key,values);
+				break;
+			case DOWN:
+				values[3] = currCoord.getDownCost();
+				qTable.put(key,values);
+				break;
+		}
+
+
+
+	}
 	public void learn(Coordinate currCoord){
 		for(Coordinate c: board.terminalStates){ //check if on terminal state
 			if(currCoord.equals(c)){
@@ -39,6 +66,7 @@ public class ReinforcementLearning {
 			}
 		}
 		Direction dir = calculateBestDirection(currCoord); // if not, make move
+		updateQtable(currCoord,dir);
 
 		//todo - each float is saved in the currCoordinate
 		//todo - iterate through the currCoordinate and find the qMAX float value and update in table
@@ -144,8 +172,20 @@ public class ReinforcementLearning {
 		return bestDir;
 		
 	}
-	
-	
+
+	public void initializeQtable(){
+		int height = this.board.height;
+		int width = this.board.width;
+
+		for (int i = 0; i < width; i++) {
+			for (int j = 0; j < height; i++) {
+				int key[] = {i,j};
+				float values[] = {0,0,0,0};
+				qTable.put(key,values);
+
+			}
+		}
+	}
 	private float calculateCoordinateValue(Coordinate currCoord, Direction dir) {
 		
 		//Initialize points

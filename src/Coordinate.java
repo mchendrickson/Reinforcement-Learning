@@ -92,6 +92,7 @@ public class Coordinate {
         this.downCost = downCost;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
