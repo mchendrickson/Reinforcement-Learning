@@ -5,11 +5,10 @@ import java.util.concurrent.ThreadLocalRandom;
 public class ReinforcementLearning {
 	private Board board;
 	private Timer timer;
-	private float timeToRun, probDesiredDirection, constantReward, sigmaPercent;
+	private float probDesiredDirection, constantReward, sigmaPercent;
 
 	public ReinforcementLearning(Board board, float timeToRun, float probDesiredDirection, float constantReward, float sigmaPercent) {
 		this.board = board;
-		this.timeToRun = timeToRun;
 		this.probDesiredDirection = probDesiredDirection;
 		this.constantReward = constantReward;
 		this.sigmaPercent = sigmaPercent;
@@ -40,9 +39,9 @@ public class ReinforcementLearning {
 		}
 		Direction dir = calculateBestDirection(currCoord); // if not, make move
 
-		//todo - each float is saved in the currCoordinate
-		//todo - iterate through the currCoordinate and find the qMAX float value and update in table
-		//todo - save new qMax float in table?
+		//TODO - each float is saved in the currCoordinate
+		//TODO - iterate through the currCoordinate and find the qMAX float value and update in table
+		//TODO - save new qMax float in table?
 
 		switch(dir){
 			case UP:
