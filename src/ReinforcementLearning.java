@@ -2,6 +2,7 @@ import java.awt.Point;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.HashMap;
+
 public class ReinforcementLearning {
 	private Board board;
 	private Timer timer;
@@ -23,15 +24,17 @@ public class ReinforcementLearning {
 	public void runReinforcement() {
 		
 		do {
+			initializeQtable();
 			int randomXCoordinate = ThreadLocalRandom.current().nextInt(0, board.width);
 			int randomYCoordinate = ThreadLocalRandom.current().nextInt(0, board.height);
-			Integer initCordValue = board.boardInt[randomXCoordinate][randomYCoordinate];
+			Integer initCordValue = board.boardInt[randomYCoordinate][randomXCoordinate];
 			Coordinate currentCoordinate = new Coordinate(CoordinateType.CURRENT, randomXCoordinate,randomYCoordinate,initCordValue);
 			learn(currentCoordinate);
 		}
 		while(!timer.finished());
 		
 	}
+
 	private void updateQtable(Coordinate currCoord, Direction dir) {
 		int[] key = {currCoord.x, currCoord.y};
 		float[] values = qTable.get(key);
@@ -40,12 +43,10 @@ public class ReinforcementLearning {
 				values[0] = currCoord.getUpCost();
 				qTable.put(key, values);
 				break;
-
 			case LEFT:
 				values[1] = currCoord.getLeftCost();
 				qTable.put(key, values);
 				break;
-
 			case RIGHT:
 				values[2] = currCoord.getRightCost();
 				qTable.put(key, values);
@@ -58,6 +59,36 @@ public class ReinforcementLearning {
 	}
 
 
+//	public void finalPrint(){
+//		String[][] finalPrint = new String[board.width][board.height];
+//		for(int i = 0; i < board.getWidth(); i++) {
+//			for(int j = 0; j < board.getHeight(); j++) {
+//				Coordinate printCoord = board.board[i][j];
+//				Direction printDir = printCoord.highestDir();
+//				switch (printDir){
+//					case UP:
+//						finalPrint[i][j] = "↑";
+//						break;
+//					case LEFT:
+//						finalPrint[i][j] = "←";
+//						break;
+//					case RIGHT:
+//						finalPrint[i][j] = ">";
+//						break;
+//					case DOWN:
+//						finalPrint[i][j] = "↓";
+//						break;
+//				}
+//			}
+//		}
+//		for(String[] s: finalPrint){
+//			for(String s1 : s){
+//				System.out.print(s1 + " ");
+//			}
+//			System.out.println();
+//		}
+//	}
+
 	public void learn(Coordinate currCoord){
 		for(Coordinate c: board.terminalStates){ //check if on terminal state
 			if(currCoord.equals(c)){
@@ -65,10 +96,13 @@ public class ReinforcementLearning {
 			}
 		}
 		Direction dir = calculateBestDirection(currCoord); // if not, make move
-		updateQtable(currCoord,dir);
+		//updateQtable(currCoord,dir);
 
-		//todo - each float is saved in the currCoordinate
-		//todo - iterate through the currCoordinate and find the qMAX float value and update in table
+		float highestFloat = currCoord.highestFloat();
+		Coordinate newCoord = currCoord.clone();
+		newCoord.value = highestFloat;
+		this.board.board[currCoord.y][currCoord.x] = newCoord;
+
 		//todo - save new qMax float in table?
 
 		switch(dir){
@@ -78,7 +112,7 @@ public class ReinforcementLearning {
 					break;
 				}
 				else{
-					learn(new Coordinate(currCoord.type, currCoord.x, currCoord.y - 1, board.board[currCoord.x-1][currCoord.y].value));
+					learn(new Coordinate(currCoord.type, currCoord.x, currCoord.y - 1, board.board[currCoord.y][currCoord.x-1].value));
 				}
 				break;
 			case DOWN:
@@ -87,7 +121,7 @@ public class ReinforcementLearning {
 					break;
 				}
 				else{
-					learn(new Coordinate(currCoord.type, currCoord.x, currCoord.y + 1, board.board[currCoord.x-1][currCoord.y].value));
+					learn(new Coordinate(currCoord.type, currCoord.x, currCoord.y + 1, board.board[currCoord.y][currCoord.x+1].value));
 				}
 				break;
 			case LEFT:
@@ -96,7 +130,7 @@ public class ReinforcementLearning {
 					break;
 				}
 				else{
-					learn(new Coordinate(currCoord.type, currCoord.x - 1, currCoord.y, board.board[currCoord.x-1][currCoord.y].value));
+					learn(new Coordinate(currCoord.type, currCoord.x - 1, currCoord.y, board.board[currCoord.y-1][currCoord.x].value));
 				}
 				break;
 			case RIGHT:
@@ -105,7 +139,7 @@ public class ReinforcementLearning {
 					break;
 				}
 				else{
-					learn(new Coordinate(currCoord.type, currCoord.x + 1, currCoord.y, board.board[currCoord.x-1][currCoord.y].value));
+					learn(new Coordinate(currCoord.type, currCoord.x + 1, currCoord.y, board.board[currCoord.y+1][currCoord.x].value));
 				}
 				break;
 		}
@@ -115,7 +149,7 @@ public class ReinforcementLearning {
 	private Direction calculateBestDirection(Coordinate currCoord) {
 	
 		Direction bestDir = null;
-		float highestValue = Float.MIN_VALUE;
+		float highestValue = -1 * Float.MAX_VALUE;
 		Direction dir = null;
 		
 		//Calculate for each direction
@@ -138,7 +172,7 @@ public class ReinforcementLearning {
 			
 			float currValue = calculateCoordinateValue(currCoord, dir); //Get the value of the specific direction
 			
-			if(currValue > highestValue) {
+			if(currValue >= highestValue) {
 				highestValue = currValue;
 				bestDir = dir;
 			}
@@ -177,14 +211,14 @@ public class ReinforcementLearning {
 		int width = this.board.width;
 
 		for (int i = 0; i < width; i++) {
-			for (int j = 0; j < height; i++) {
+			for (int j = 0; j < height; j++) {
 				int key[] = {i,j};
 				float values[] = {0,0,0,0};
 				qTable.put(key,values);
-
 			}
 		}
 	}
+
 	private float calculateCoordinateValue(Coordinate currCoord, Direction dir) {
 		
 		//Initialize points
@@ -207,26 +241,26 @@ public class ReinforcementLearning {
 		double rightValMult = 0;
 		
 		//Get the value of the coordinate on the board. If it doesn't exist, simply return the cost to bounce back (the constant reward)
-		if(top.y <= board.height) {
-			topVal = board.getBoard()[top.x][top.y].getValue();
+		if(top.y < board.height) {
+			topVal = board.getBoard()[top.y][top.x].getValue();
 		}else {
 			topVal = constantReward;
 		}
 		
 		if(bottom.y >= 0) {
-			bottomVal = board.getBoard()[bottom.x][bottom.y].getValue();
+			bottomVal = board.getBoard()[bottom.y][bottom.x].getValue();
 		}else {
 			bottomVal = constantReward;
 		}
 		
 		if(left.x >= 0) {
-			leftVal = board.getBoard()[left.x][left.y].getValue();
+			leftVal = board.getBoard()[left.y][left.x].getValue();
 		}else {
 			leftVal = constantReward;
 		}
 		
-		if(right.x <= board.width) {
-			rightVal = board.getBoard()[right.x][right.y].getValue();
+		if(right.x < board.width) {
+			rightVal = board.getBoard()[right.y][right.x].getValue();
 		}else {
 			rightVal = constantReward;
 		}

@@ -48,4 +48,13 @@ public class Board {
     }
 
 
+    public int getHeight() {
+        return height;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+
 }

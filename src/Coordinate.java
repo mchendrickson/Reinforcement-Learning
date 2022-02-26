@@ -1,10 +1,10 @@
 import java.util.Objects;
 
-public class Coordinate {
+public class Coordinate implements Cloneable{
     CoordinateType type;
     public int x;
     public int y;
-    Integer value;
+    float value;
     float upCost;
     float leftCost;
     float rightCost;
@@ -21,7 +21,39 @@ public class Coordinate {
         this.downCost = downCost;
     }
 
-    public Coordinate(CoordinateType type, int xCoordinate, int yCoordinate, Integer value) {
+    public float highestFloat(){
+        float currHighest = this.upCost;
+        if(currHighest < this.downCost){
+            currHighest = this.downCost;
+        }
+        if(currHighest < this.rightCost){
+            currHighest = this.rightCost;
+        }
+        if (currHighest < this.leftCost) {
+            currHighest = this.leftCost;
+        }
+        return currHighest;
+    }
+
+    public Direction highestDir(){
+        Direction currHighestDir = Direction.UP;
+        float currHighest = this.upCost;
+        if(currHighest < this.downCost){
+            currHighest = this.downCost;
+            currHighestDir = Direction.DOWN;
+        }
+        if(currHighest < this.rightCost){
+            currHighest = this.rightCost;
+            currHighestDir = Direction.RIGHT;
+        }
+        if (currHighest < this.leftCost) {
+            currHighest = this.leftCost;
+            currHighestDir = Direction.LEFT;
+        }
+        return currHighestDir;
+    }
+
+    public Coordinate(CoordinateType type, int xCoordinate, int yCoordinate, float value) {
         this.type = type;
         this.x = xCoordinate;
         this.y = yCoordinate;
@@ -40,7 +72,7 @@ public class Coordinate {
         return y;
     }
 
-    public Integer getValue() {
+    public float getValue() {
         return value;
     }
 
@@ -104,5 +136,16 @@ public class Coordinate {
     @Override
     public int hashCode() {
         return Objects.hash(x, y, value);
+    }
+
+    @Override
+    public Coordinate clone() {
+        try {
+            Coordinate clone = (Coordinate) super.clone();
+            // TODO: copy mutable state here, so the clone can't change the internals of the original
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }
