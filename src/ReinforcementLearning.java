@@ -32,33 +32,32 @@ public class ReinforcementLearning {
 		while(!timer.finished());
 		
 	}
-	private void updateQtable(Coordinate currCoord, Direction dir){
-		int []key = {currCoord.x, currCoord.y};
-		float []values = qTable.get(key);
-		switch(dir){
+	private void updateQtable(Coordinate currCoord, Direction dir) {
+		int[] key = {currCoord.x, currCoord.y};
+		float[] values = qTable.get(key);
+		switch (dir) {
 			case UP:
 				values[0] = currCoord.getUpCost();
-				qTable.put(key,values);
+				qTable.put(key, values);
 				break;
 
 			case LEFT:
 				values[1] = currCoord.getLeftCost();
-				qTable.put(key,values);
+				qTable.put(key, values);
 				break;
 
 			case RIGHT:
 				values[2] = currCoord.getRightCost();
-				qTable.put(key,values);
+				qTable.put(key, values);
 				break;
 			case DOWN:
 				values[3] = currCoord.getDownCost();
-				qTable.put(key,values);
+				qTable.put(key, values);
 				break;
 		}
-
-
-
 	}
+
+
 	public void learn(Coordinate currCoord){
 		for(Coordinate c: board.terminalStates){ //check if on terminal state
 			if(currCoord.equals(c)){
