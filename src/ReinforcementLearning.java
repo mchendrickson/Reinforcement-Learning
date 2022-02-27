@@ -28,7 +28,7 @@ public class ReinforcementLearning {
 			int randomXCoordinate = ThreadLocalRandom.current().nextInt(0, board.width);
 			int randomYCoordinate = ThreadLocalRandom.current().nextInt(0, board.height);
 			
-			System.out.println("Starting at: (" + randomXCoordinate + " " + randomYCoordinate + ")");
+			//System.out.println("Starting at: (" + randomXCoordinate + " " + randomYCoordinate + ")");
 			
 			Integer initCordValue = board.boardInt[randomYCoordinate][randomXCoordinate];
 			Coordinate currentCoordinate = new Coordinate(CoordinateType.CURRENT, randomXCoordinate,randomYCoordinate,initCordValue);
@@ -106,10 +106,11 @@ public class ReinforcementLearning {
 
 		float highestFloat = currCoord.highestFloat();
 		Coordinate newCoord = currCoord.clone();
-		if(newCoord.getType() != CoordinateType.TERMINAL) {
+		if(currCoord.getType() != CoordinateType.TERMINAL) {
 			newCoord.value = highestFloat;
+			this.board.board[currCoord.row][currCoord.col] = newCoord;
 		}
-		this.board.board[currCoord.row][currCoord.col] = newCoord;
+
 
 		//todo - save new qMax float in table?
 		

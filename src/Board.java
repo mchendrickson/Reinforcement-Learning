@@ -34,9 +34,8 @@ public class Board {
     	for (int row = 0; row < height; row++) {
             for (int col = 0; col < width; col++) {
                 int boardVal = boardInt[row][col];
-                System.out.print(boardVal + " 	");
                 CoordinateType type;
-                if (boardVal >= 1) {
+                if (boardVal != 0) {
                     type = CoordinateType.TERMINAL;
                     this.terminalStates.add(new Coordinate(CoordinateType.TERMINAL,row,col,boardVal));
                 } else {

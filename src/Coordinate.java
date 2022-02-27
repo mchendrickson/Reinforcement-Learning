@@ -10,7 +10,7 @@ public class Coordinate implements Cloneable{
     float rightCost;
     float downCost;
 
-    public Coordinate(CoordinateType type, int colCoordinate, int rowCoordinate, Integer value, float upCost, float leftCost, float rightCost, float downCost) {
+    public Coordinate(CoordinateType type, int colCoordinate, int rowCoordinate, float value, float upCost, float leftCost, float rightCost, float downCost) {
         this.type = type;
         this.col = colCoordinate;
         this.row = rowCoordinate;
@@ -140,12 +140,6 @@ public class Coordinate implements Cloneable{
 
     @Override
     public Coordinate clone() {
-        try {
-            Coordinate clone = (Coordinate) super.clone();
-            // TODO: copy mutable state here, so the clone can't change the internals of the original
-            return clone;
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError();
-        }
+        return new Coordinate(type, col, row, value, upCost, leftCost, rightCost, downCost);
     }
 }
