@@ -113,7 +113,7 @@ public class ReinforcementLearning {
 				}
 				else{
 					System.out.print(board.board[0][0].getcolCoordinate());
-					learn(new Coordinate(currCoord.type, currCoord.col, currCoord.row - 1, board.board[currCoord.row][currCoord.col-1].value));
+					learn(new Coordinate(currCoord.type, currCoord.col, currCoord.row - 1, board.board[currCoord.row-1][currCoord.col].value));
 				}
 				break;
 			case DOWN:
@@ -125,7 +125,7 @@ public class ReinforcementLearning {
 					System.out.println(currCoord.col);
 					System.out.println(currCoord.row);
 
-					learn(new Coordinate(currCoord.type, currCoord.col, currCoord.row + 1, board.board[currCoord.row][currCoord.col+1].value));
+					learn(new Coordinate(currCoord.type, currCoord.col, currCoord.row + 1, board.board[currCoord.row+1][currCoord.col].value));
 				}
 				break;
 			case LEFT:
@@ -134,7 +134,7 @@ public class ReinforcementLearning {
 					break;
 				}
 				else{
-					learn(new Coordinate(currCoord.type, currCoord.col - 1, currCoord.row, board.board[currCoord.row-1][currCoord.col].value));
+					learn(new Coordinate(currCoord.type, currCoord.col - 1, currCoord.row, board.board[currCoord.row][currCoord.col-1].value));
 				}
 				break;
 			case RIGHT:
@@ -143,7 +143,7 @@ public class ReinforcementLearning {
 					break;
 				}
 				else{
-					learn(new Coordinate(currCoord.type, currCoord.col + 1, currCoord.row, board.board[currCoord.row+1][currCoord.col].value));
+					learn(new Coordinate(currCoord.type, currCoord.col + 1, currCoord.row, board.board[currCoord.row][currCoord.col+1].value));
 				}
 				break;
 		}
