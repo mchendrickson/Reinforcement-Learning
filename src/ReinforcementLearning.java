@@ -36,7 +36,7 @@ public class ReinforcementLearning {
 	}
 
 	private void updateQtable(Coordinate currCoord, Direction dir) {
-		int[] key = {currCoord.x, currCoord.y};
+		int[] key = {currCoord.col, currCoord.row};
 		float[] values = qTable.get(key);
 		switch (dir) {
 			case UP:
@@ -67,16 +67,16 @@ public class ReinforcementLearning {
 //				Direction printDir = printCoord.highestDir();
 //				switch (printDir){
 //					case UP:
-//						finalPrint[i][j] = "â†‘";
+//						finalPrint[i][j] = "↑";
 //						break;
 //					case LEFT:
-//						finalPrint[i][j] = "â†�";
+//						finalPrint[i][j] = "←";
 //						break;
 //					case RIGHT:
 //						finalPrint[i][j] = ">";
 //						break;
 //					case DOWN:
-//						finalPrint[i][j] = "â†“";
+//						finalPrint[i][j] = "↓";
 //						break;
 //				}
 //			}
@@ -101,45 +101,49 @@ public class ReinforcementLearning {
 		float highestFloat = currCoord.highestFloat();
 		Coordinate newCoord = currCoord.clone();
 		newCoord.value = highestFloat;
-		this.board.board[currCoord.y][currCoord.x] = newCoord;
+		this.board.board[currCoord.row][currCoord.col] = newCoord;
 
 		//todo - save new qMax float in table?
 
 		switch(dir){
 			case UP:
-				if(currCoord.y == 0){ // check if at top bound
+				if(currCoord.row == 0){ // check if at top bound
 					learn(currCoord);
 					break;
 				}
 				else{
-					learn(new Coordinate(currCoord.type, currCoord.x, currCoord.y - 1, board.board[currCoord.y-1][currCoord.x].value));
+					System.out.print(board.board[0][0].getcolCoordinate());
+					learn(new Coordinate(currCoord.type, currCoord.col, currCoord.row - 1, board.board[currCoord.row][currCoord.col-1].value));
 				}
 				break;
 			case DOWN:
-				if(currCoord.y == board.height){ // check if at bottom bound
+				if(currCoord.row == board.height){ // check if at bottom bound
 					learn(currCoord);
 					break;
 				}
 				else{
-					learn(new Coordinate(currCoord.type, currCoord.x, currCoord.y + 1, board.board[currCoord.y+1][currCoord.x].value));
+					System.out.println(currCoord.col);
+					System.out.println(currCoord.row);
+
+					learn(new Coordinate(currCoord.type, currCoord.col, currCoord.row + 1, board.board[currCoord.row][currCoord.col+1].value));
 				}
 				break;
 			case LEFT:
-				if(currCoord.x == 0){ // check if at left bound
+				if(currCoord.col == 0){ // check if at left bound
 					learn(currCoord);
 					break;
 				}
 				else{
-					learn(new Coordinate(currCoord.type, currCoord.x - 1, currCoord.y, board.board[currCoord.y][currCoord.x-1].value));
+					learn(new Coordinate(currCoord.type, currCoord.col - 1, currCoord.row, board.board[currCoord.row-1][currCoord.col].value));
 				}
 				break;
 			case RIGHT:
-				if(currCoord.x == 0){ // check if at right bound
+				if(currCoord.col == 0){ // check if at right bound
 					learn(currCoord);
 					break;
 				}
 				else{
-					learn(new Coordinate(currCoord.type, currCoord.x + 1, currCoord.y, board.board[currCoord.y][currCoord.x+1].value));
+					learn(new Coordinate(currCoord.type, currCoord.col + 1, currCoord.row, board.board[currCoord.row+1][currCoord.col].value));
 				}
 				break;
 		}
@@ -223,10 +227,10 @@ public class ReinforcementLearning {
 		
 		//Initialize points
 		Point top, bottom, left, right;
-		top = new Point(currCoord.x, currCoord.y + 1);
-		bottom = new Point(currCoord.x, currCoord.y - 1);
-		left = new Point(currCoord.x - 1, currCoord.y);
-		right = new Point(currCoord.x + 1, currCoord.y);
+		top = new Point(currCoord.col, currCoord.row + 1);
+		bottom = new Point(currCoord.col, currCoord.row - 1);
+		left = new Point(currCoord.col - 1, currCoord.row);
+		right = new Point(currCoord.col + 1, currCoord.row);
 		
 		//Total value of the coordinate locations
 		float topVal = 0; 
