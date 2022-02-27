@@ -71,7 +71,7 @@ public class ReinforcementLearning {
 				CoordinateType type = printCoord.type;
 				switch(type){
 					case TERMINAL:
-						finalPrint[i][j] = "X\t";
+						finalPrint[i][j] = "■\t";
 						break;
 					case CURRENT:
 						switch (printDir){
