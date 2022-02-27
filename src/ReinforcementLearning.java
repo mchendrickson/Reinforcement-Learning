@@ -67,16 +67,16 @@ public class ReinforcementLearning {
 //				Direction printDir = printCoord.highestDir();
 //				switch (printDir){
 //					case UP:
-//						finalPrint[i][j] = "↑";
+//						finalPrint[i][j] = "â†‘";
 //						break;
 //					case LEFT:
-//						finalPrint[i][j] = "←";
+//						finalPrint[i][j] = "â†�";
 //						break;
 //					case RIGHT:
 //						finalPrint[i][j] = ">";
 //						break;
 //					case DOWN:
-//						finalPrint[i][j] = "↓";
+//						finalPrint[i][j] = "â†“";
 //						break;
 //				}
 //			}
@@ -112,7 +112,7 @@ public class ReinforcementLearning {
 					break;
 				}
 				else{
-					learn(new Coordinate(currCoord.type, currCoord.x, currCoord.y - 1, board.board[currCoord.y][currCoord.x-1].value));
+					learn(new Coordinate(currCoord.type, currCoord.x, currCoord.y - 1, board.board[currCoord.y-1][currCoord.x].value));
 				}
 				break;
 			case DOWN:
@@ -121,7 +121,7 @@ public class ReinforcementLearning {
 					break;
 				}
 				else{
-					learn(new Coordinate(currCoord.type, currCoord.x, currCoord.y + 1, board.board[currCoord.y][currCoord.x+1].value));
+					learn(new Coordinate(currCoord.type, currCoord.x, currCoord.y + 1, board.board[currCoord.y+1][currCoord.x].value));
 				}
 				break;
 			case LEFT:
@@ -130,7 +130,7 @@ public class ReinforcementLearning {
 					break;
 				}
 				else{
-					learn(new Coordinate(currCoord.type, currCoord.x - 1, currCoord.y, board.board[currCoord.y-1][currCoord.x].value));
+					learn(new Coordinate(currCoord.type, currCoord.x - 1, currCoord.y, board.board[currCoord.y][currCoord.x-1].value));
 				}
 				break;
 			case RIGHT:
@@ -139,7 +139,7 @@ public class ReinforcementLearning {
 					break;
 				}
 				else{
-					learn(new Coordinate(currCoord.type, currCoord.x + 1, currCoord.y, board.board[currCoord.y+1][currCoord.x].value));
+					learn(new Coordinate(currCoord.type, currCoord.x + 1, currCoord.y, board.board[currCoord.y][currCoord.x+1].value));
 				}
 				break;
 		}

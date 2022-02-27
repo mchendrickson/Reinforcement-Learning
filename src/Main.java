@@ -30,7 +30,7 @@ public class Main {
         }
 
         //String fileName = "C:\\Users\\Star Killer\\eclipse-workspace\\CS4341Assignment4\\sample.txt";
-        String fileName = "C:\\Users\\Josh\\IdeaProjects\\CS4341Assignment4\\sample.txt";
+        //String fileName = "C:\\Users\\Josh\\IdeaProjects\\CS4341Assignment4\\sample.txt";
 
         try {
             timeToRun = Float.parseFloat(args[1]);
@@ -60,7 +60,7 @@ public class Main {
 //		float constantReward = -0.05f;
         float sigmaPercent = 0.1f;
 
-        openFile(fileName);
+        openFile(args[0]);
         //printBoard(boardFile);
         Board b = new Board(boardHeight, boardWidth, boardFile);
 
