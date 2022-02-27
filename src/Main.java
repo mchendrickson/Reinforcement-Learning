@@ -30,7 +30,7 @@ public class Main {
         }
 
         //String fileName = "C:\\Users\\Star Killer\\eclipse-workspace\\CS4341Assignment4\\sample.txt";
-        String fileName = "C:\\Users\\Josh\\IdeaProjects\\CS4341Assignment4\\sample.txt";
+        String fileName = "C:\\Users\\yveder\\CS4341Assignment4\\sample.txt";
 
         try {
             timeToRun = Float.parseFloat(args[1]);

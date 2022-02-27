@@ -2,18 +2,18 @@ import java.util.Objects;
 
 public class Coordinate implements Cloneable{
     CoordinateType type;
-    public int x;
-    public int y;
+    public int col;
+    public int row;
     float value;
     float upCost;
     float leftCost;
     float rightCost;
     float downCost;
 
-    public Coordinate(CoordinateType type, int xCoordinate, int yCoordinate, Integer value, float upCost, float leftCost, float rightCost, float downCost) {
+    public Coordinate(CoordinateType type, int colCoordinate, int rowCoordinate, Integer value, float upCost, float leftCost, float rightCost, float downCost) {
         this.type = type;
-        this.x = xCoordinate;
-        this.y = yCoordinate;
+        this.col = colCoordinate;
+        this.row = rowCoordinate;
         this.value = value;
         this.upCost = upCost;
         this.leftCost = leftCost;
@@ -53,10 +53,10 @@ public class Coordinate implements Cloneable{
         return currHighestDir;
     }
 
-    public Coordinate(CoordinateType type, int xCoordinate, int yCoordinate, float value) {
+    public Coordinate(CoordinateType type, int colCoordinate, int rowCoordinate, float value) {
         this.type = type;
-        this.x = xCoordinate;
-        this.y = yCoordinate;
+        this.col = colCoordinate;
+        this.row = rowCoordinate;
         this.value = value;
     }
 
@@ -64,12 +64,12 @@ public class Coordinate implements Cloneable{
         return type;
     }
 
-    public int getxCoordinate() {
-        return x;
+    public int getcolCoordinate() {
+        return col;
     }
 
     public int getyCoordinate() {
-        return y;
+        return row;
     }
 
     public float getValue() {
@@ -96,12 +96,12 @@ public class Coordinate implements Cloneable{
         this.type = type;
     }
 
-    public void setxCoordinate(int xCoordinate) {
-        this.x = xCoordinate;
+    public void setcolCoordinate(int colCoordinate) {
+        this.col = colCoordinate;
     }
 
-    public void setyCoordinate(int yCoordinate) {
-        this.y = yCoordinate;
+    public void setyCoordinate(int rowCoordinate) {
+        this.row = rowCoordinate;
     }
 
     public void setValue(Integer value) {
@@ -130,12 +130,12 @@ public class Coordinate implements Cloneable{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Coordinate that = (Coordinate) o;
-        return x == that.x && y == that.y && Objects.equals(value, that.value);
+        return row == that.col && row == that.row && Objects.equals(value, that.value);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(x, y, value);
+        return Objects.hash(col, row, value);
     }
 
     @Override

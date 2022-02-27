@@ -41,7 +41,7 @@ public class Board {
                 } else {
                     type = CoordinateType.CURRENT;
                 }
-                board[i][j] = new Coordinate(type, i, j, boardInt[i][j]);
+                board[i][j] = new Coordinate(type, j, i, boardInt[i][j]);
             }
             System.out.println();
         }
