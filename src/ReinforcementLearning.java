@@ -104,15 +104,16 @@ public class ReinforcementLearning {
 		this.board.board[currCoord.row][currCoord.col] = newCoord;
 
 		//todo - save new qMax float in table?
-
+		
+		System.out.println("Currently at: (" + currCoord.col + " " + currCoord.row + ") " + "Moving: " + dir);
 		switch(dir){
+	
 			case UP:
 				if(currCoord.row == 0){ // check if at top bound
 					learn(currCoord);
 					break;
 				}
 				else{
-					System.out.print(board.board[0][0].getcolCoordinate());
 					learn(new Coordinate(currCoord.type, currCoord.col, currCoord.row - 1, board.board[currCoord.row-1][currCoord.col].value));
 				}
 				break;
@@ -122,9 +123,6 @@ public class ReinforcementLearning {
 					break;
 				}
 				else{
-					System.out.println(currCoord.col);
-					System.out.println(currCoord.row);
-
 					learn(new Coordinate(currCoord.type, currCoord.col, currCoord.row + 1, board.board[currCoord.row+1][currCoord.col].value));
 				}
 				break;
