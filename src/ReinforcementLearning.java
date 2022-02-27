@@ -93,9 +93,10 @@ public class ReinforcementLearning {
 //	}
 
 	public void learn(Coordinate currCoord){
-		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 		for(Coordinate c: board.terminalStates){ //check if on terminal state
 			if(currCoord.equals(c)){
+				System.out.println("TERMINAL STATE TERMINAL STATE!!!!!");
 				return; //return if terminal
 			}
 		}
@@ -105,7 +106,9 @@ public class ReinforcementLearning {
 
 		float highestFloat = currCoord.highestFloat();
 		Coordinate newCoord = currCoord.clone();
-		newCoord.value = highestFloat;
+		if(newCoord.getType() != CoordinateType.TERMINAL) {
+			newCoord.value = highestFloat;
+		}
 		this.board.board[currCoord.row][currCoord.col] = newCoord;
 
 		//todo - save new qMax float in table?
