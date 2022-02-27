@@ -35,7 +35,7 @@ public class ReinforcementLearning {
 			learn(currentCoordinate);
 		}
 		while(!timer.finished());
-		
+		finalPrint();
 	}
 
 	private void updateQtable(Coordinate currCoord, Direction dir) {
@@ -62,35 +62,43 @@ public class ReinforcementLearning {
 	}
 
 
-//	public void finalPrint(){
-//		String[][] finalPrint = new String[board.width][board.height];
-//		for(int i = 0; i < board.getWidth(); i++) {
-//			for(int j = 0; j < board.getHeight(); j++) {
-//				Coordinate printCoord = board.board[i][j];
-//				Direction printDir = printCoord.highestDir();
-//				switch (printDir){
-//					case UP:
-//						finalPrint[i][j] = "↑";
-//						break;
-//					case LEFT:
-//						finalPrint[i][j] = "←";
-//						break;
-//					case RIGHT:
-//						finalPrint[i][j] = ">";
-//						break;
-//					case DOWN:
-//						finalPrint[i][j] = "↓";
-//						break;
-//				}
-//			}
-//		}
-//		for(String[] s: finalPrint){
-//			for(String s1 : s){
-//				System.out.print(s1 + " ");
-//			}
-//			System.out.println();
-//		}
-//	}
+	public void finalPrint(){
+		String[][] finalPrint = new String[board.width][board.height];
+		for(int i = 0; i < board.getWidth(); i++) {
+			for(int j = 0; j < board.getHeight(); j++) {
+				Coordinate printCoord = board.board[j][i];
+				Direction printDir = printCoord.highestDir();
+				CoordinateType type = printCoord.type;
+				switch(type){
+					case TERMINAL:
+						finalPrint[i][j] = "X\t";
+						break;
+					case CURRENT:
+						switch (printDir){
+							case UP:
+								finalPrint[i][j] = "↑\t";
+								break;
+							case LEFT:
+								finalPrint[i][j] = "←\t";
+								break;
+							case RIGHT:
+								finalPrint[i][j] = "→\t";
+								break;
+							case DOWN:
+								finalPrint[i][j] = "↓\t";
+								break;
+						}
+						break;
+				}
+			}
+		}
+		for(String[] s: finalPrint){
+			for(String s1 : s){
+				System.out.print(s1 + " ");
+			}
+			System.out.println();
+		}
+	}
 
 	public void learn(Coordinate currCoord){
 		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
