@@ -58,10 +58,21 @@ public class Main {
         float sigmaPercent = 0.1f;
 
         openFile(args[0]);
-        //printBoard(boardFile);
+        printBoard(boardFile);
+        
+        System.out.println();
+        
         Board b = new Board(boardHeight, boardWidth, boardFile);
-
+        System.out.println("Running board of height: " + boardHeight + ", width " + boardWidth + " for " + timeToRun + " seconds ");
+        System.out.println("Probability of desired direction: " + probDesiredDirection * 100 + "%");
+        System.out.println("Probability of random direction: " + sigmaPercent * 100 + "%"); 
+        System.out.println("Constant reward: " + constantReward);
+        
+        System.out.println();
+        
         ReinforcementLearning learning = new ReinforcementLearning(b, timeToRun, probDesiredDirection, constantReward, sigmaPercent);
+        
+        System.out.println();
     }
 
 

@@ -43,7 +43,7 @@ public class Board {
                 }
                 board[row][col] = new Coordinate(type, col, row, boardVal);
             }
-            System.out.println();
+            
         }
     }
 

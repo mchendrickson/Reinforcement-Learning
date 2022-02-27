@@ -28,7 +28,7 @@ public class ReinforcementLearning {
 			int randomXCoordinate = ThreadLocalRandom.current().nextInt(0, board.width);
 			int randomYCoordinate = ThreadLocalRandom.current().nextInt(0, board.height);
 			
-			System.out.println("Starting at: (" + randomXCoordinate + " " + randomYCoordinate + ")");
+			//System.out.println("Starting at: (" + randomXCoordinate + " " + randomYCoordinate + ")");
 			
 			Integer initCordValue = board.boardInt[randomYCoordinate][randomXCoordinate];
 			Coordinate currentCoordinate = new Coordinate(CoordinateType.CURRENT, randomXCoordinate,randomYCoordinate,initCordValue);
@@ -76,16 +76,16 @@ public class ReinforcementLearning {
 					case CURRENT:
 						switch (printDir){
 							case UP:
-								finalPrint[row][col] = "^\t";
+								finalPrint[row][col] = "^";
 								break;
 							case LEFT:
-								finalPrint[row][col] = "<\t";
+								finalPrint[row][col] = "<";
 								break;
 							case RIGHT:
-								finalPrint[row][col] = ">\t";
+								finalPrint[row][col] = ">";
 								break;
 							case DOWN:
-								finalPrint[row][col] = "v\t";
+								finalPrint[row][col] = "v";
 								break;
 						}
 						break;
@@ -94,21 +94,21 @@ public class ReinforcementLearning {
 		}
 		for(String[] s: finalPrint){
 			for(String s1 : s){
-				System.out.print(s1 + " ");
+				System.out.print(s1 + "\t");
 			}
 			System.out.println();
 		}
 	}
 
 	public void learn(Coordinate currCoord){
-		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+		//System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 		for(Coordinate c: board.terminalStates){ //check if on terminal state
 			if(currCoord.equals(c)){
-				System.out.println("Found Terminal State");
+				//System.out.println("Found Terminal State");
 				return; //return if terminal
 			}
 		}
-		board.printBoard();
+		//board.printBoard();
 		Direction dir = calculateBestDirection(currCoord); // if not, make move
 		//updateQtable(currCoord,dir);
 
@@ -123,7 +123,7 @@ public class ReinforcementLearning {
 
 		//todo - save new qMax float in table?
 		
-		System.out.println("Currently at: (" + currCoord.col + " " + currCoord.row + ") " + "Moving: " + dir);
+		//System.out.println("Currently at: (" + currCoord.col + " " + currCoord.row + ") " + "Moving: " + dir);
 		switch(dir){
 	
 			case UP:
@@ -285,14 +285,14 @@ public class ReinforcementLearning {
 			rightVal = constantReward + currCoord.getValue();
 		}
 		
-		System.out.println("\nDir " + dir);
+		//System.out.println("\nDir " + dir);
 
-		System.out.println("topVal " + topVal);
-		System.out.println("bottomVal " + bottomVal);
-		System.out.println("leftVal " + leftVal);
-		System.out.println("rightVal " + rightVal);
+		//System.out.println("topVal " + topVal);
+		//System.out.println("bottomVal " + bottomVal);
+		//System.out.println("leftVal " + leftVal);
+		//System.out.println("rightVal " + rightVal);
 
-		System.out.println("\n\n");
+		//System.out.println("\n\n");
 
 		//Assign multiplication weights based on what direction we travel. (It is impossible to travel backwards)
 		switch(dir) {
