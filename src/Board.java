@@ -1,3 +1,4 @@
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class Board {
@@ -48,9 +49,12 @@ public class Board {
     }
 
     public void printBoard() {
+    	DecimalFormat df = new DecimalFormat("#.##");
+    	
+    	
         for (int i = 0; i < this.height; i++) {
             for (int j = 0; j < this.width; j++) {
-                System.out.print(this.board[i][j].value + "\t \t");
+                System.out.print(df.format(this.board[i][j].value) + "\t");
             }
             System.out.println();
         }
