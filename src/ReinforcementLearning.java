@@ -63,29 +63,29 @@ public class ReinforcementLearning {
 
 
 	public void finalPrint(){
-		String[][] finalPrint = new String[board.width][board.height];
-		for(int i = 0; i < board.getWidth(); i++) {
-			for(int j = 0; j < board.getHeight(); j++) {
-				Coordinate printCoord = board.board[j][i];
+		String[][] finalPrint = new String[board.height][board.width];
+		for(int row = 0; row < board.height; row++) {
+			for(int col = 0; col < board.width; col++) {
+				Coordinate printCoord = board.board[row][col];
 				Direction printDir = printCoord.highestDir();
 				CoordinateType type = printCoord.type;
 				switch(type){
 					case TERMINAL:
-						finalPrint[i][j] = "■\t";
+						finalPrint[row][col] = "■\t";
 						break;
 					case CURRENT:
 						switch (printDir){
 							case UP:
-								finalPrint[i][j] = "↑\t";
+								finalPrint[row][col] = "^\t";
 								break;
 							case LEFT:
-								finalPrint[i][j] = "←\t";
+								finalPrint[row][col] = "<\t";
 								break;
 							case RIGHT:
-								finalPrint[i][j] = "→\t";
+								finalPrint[row][col] = ">\t";
 								break;
 							case DOWN:
-								finalPrint[i][j] = "↓\t";
+								finalPrint[row][col] = "v\t";
 								break;
 						}
 						break;
