@@ -253,7 +253,7 @@ public class ReinforcementLearning {
 		double rightValMult = 0;
 		
 		//Get the value of the coordinate on the board. If it doesn't exist, simply return the cost to bounce back (the constant reward)
-		if(top.y <= 0) {
+		if(top.y >= 0) {
 			topVal = board.getBoard()[top.y][top.x].getValue();
 		}else {
 			topVal = constantReward + currCoord.getValue();
