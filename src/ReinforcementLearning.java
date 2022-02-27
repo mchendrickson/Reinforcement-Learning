@@ -109,6 +109,7 @@ public class ReinforcementLearning {
 		if(currCoord.getType() != CoordinateType.TERMINAL) {
 			newCoord.value = highestFloat;
 			this.board.board[currCoord.row][currCoord.col] = newCoord;
+			
 		}
 
 
@@ -254,6 +255,7 @@ public class ReinforcementLearning {
 		//Get the value of the coordinate on the board. If it doesn't exist, simply return the cost to bounce back (the constant reward)
 		if(top.y < board.height) {
 			topVal = board.getBoard()[top.y][top.x].getValue();
+
 		}else {
 			topVal = constantReward;
 		}

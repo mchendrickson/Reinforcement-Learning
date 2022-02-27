@@ -37,11 +37,11 @@ public class Board {
                 CoordinateType type;
                 if (boardVal != 0) {
                     type = CoordinateType.TERMINAL;
-                    this.terminalStates.add(new Coordinate(CoordinateType.TERMINAL,row,col,boardVal));
+                    this.terminalStates.add(new Coordinate(CoordinateType.TERMINAL,col,row,boardVal));
                 } else {
                     type = CoordinateType.CURRENT;
                 }
-                board[row][col] = new Coordinate(type, col, row, boardInt[row][col]);
+                board[row][col] = new Coordinate(type, col, row, boardVal);
             }
             System.out.println();
         }

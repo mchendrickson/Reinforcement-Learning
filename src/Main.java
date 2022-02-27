@@ -79,13 +79,12 @@ public class Main {
             for (int i = 0; i < boardRowStr.length; i++) {
                 boardRow[i] = Integer.parseInt(boardRowStr[i]);
             }
-            boardHeight = rows.size();
+            boardHeight = rows.size()+1;
             rows.add(boardRow);
             boardFile = new Integer[rows.size()][boardRow.length];
-            int i = 0;
-            for (Integer[] row : rows) {
-                boardFile[i] = row;
-                i++;
+           
+            for (int i = 0; i < rows.size(); i++) {
+                boardFile[i] = rows.get(i);
             }
 
 
