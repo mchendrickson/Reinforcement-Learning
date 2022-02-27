@@ -65,7 +65,7 @@ public class Main {
         Board b = new Board(boardHeight, boardWidth, boardFile);
         System.out.println("Running board of height: " + boardHeight + ", width " + boardWidth + " for " + timeToRun + " seconds ");
         System.out.println("Probability of desired direction: " + probDesiredDirection * 100 + "%");
-        System.out.println("Probability of random direction: " + sigmaPercent * 100 + "%"); 
+        System.out.println("Probability of random direction (epsilon): " + sigmaPercent * 100 + "%"); 
         System.out.println("Constant reward: " + constantReward);
         
         System.out.println();
