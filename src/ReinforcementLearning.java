@@ -96,7 +96,7 @@ public class ReinforcementLearning {
 		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 		for(Coordinate c: board.terminalStates){ //check if on terminal state
 			if(currCoord.equals(c)){
-				System.out.println("TERMINAL STATE TERMINAL STATE!!!!!");
+				System.out.println("Found Terminal State");
 				return; //return if terminal
 			}
 		}
@@ -118,7 +118,7 @@ public class ReinforcementLearning {
 	
 			case UP:
 				if(currCoord.row == 0){ // check if at top bound
-					learn(currCoord);
+					learn(new Coordinate(currCoord.type, currCoord.col, currCoord.row, board.board[currCoord.row][currCoord.col].value));
 					break;
 				}
 				else{
@@ -127,7 +127,7 @@ public class ReinforcementLearning {
 				break;
 			case DOWN:
 				if(currCoord.row == board.height - 1){ // check if at bottom bound
-					learn(currCoord);
+					learn(new Coordinate(currCoord.type, currCoord.col, currCoord.row, board.board[currCoord.row][currCoord.col].value));
 					break;
 				}
 				else{
@@ -136,7 +136,7 @@ public class ReinforcementLearning {
 				break;
 			case LEFT:
 				if(currCoord.col == 0){ // check if at left bound
-					learn(currCoord);
+					learn(new Coordinate(currCoord.type, currCoord.col, currCoord.row, board.board[currCoord.row][currCoord.col].value));
 					break;
 				}
 				else{
@@ -145,7 +145,7 @@ public class ReinforcementLearning {
 				break;
 			case RIGHT:
 				if(currCoord.col == board.width - 1){ // check if at right bound
-					learn(currCoord);
+					learn(new Coordinate(currCoord.type, currCoord.col, currCoord.row, board.board[currCoord.row][currCoord.col].value));
 					break;
 				}
 				else{
