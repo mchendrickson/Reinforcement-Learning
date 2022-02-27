@@ -25,7 +25,7 @@ public class Timer extends Thread {
 			elapsedTime = (new Date()).getTime() - startTime;
 
 		}
-		System.out.println("\n\nTimer finished! ");
+		//System.out.println("\n\nTimer finished! ");
 	}
 
 	/**
