@@ -30,18 +30,18 @@ public class Board {
 
     private void initializeBoard() {
         terminalStates = new ArrayList<Coordinate>();
-    	for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                int boardVal = boardInt[i][j];
+    	for (int row = 0; row < height; row++) {
+            for (int col = 0; col < width; col++) {
+                int boardVal = boardInt[row][col];
                 System.out.print(boardVal + " 	");
                 CoordinateType type;
                 if (boardVal >= 1) {
                     type = CoordinateType.TERMINAL;
-                    this.terminalStates.add(new Coordinate(CoordinateType.TERMINAL,i,j,boardVal));
+                    this.terminalStates.add(new Coordinate(CoordinateType.TERMINAL,row,col,boardVal));
                 } else {
                     type = CoordinateType.CURRENT;
                 }
-                board[i][j] = new Coordinate(type, j, i, boardInt[i][j]);
+                board[row][col] = new Coordinate(type, col, row, boardInt[row][col]);
             }
             System.out.println();
         }

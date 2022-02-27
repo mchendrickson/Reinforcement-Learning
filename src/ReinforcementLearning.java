@@ -17,16 +17,19 @@ public class ReinforcementLearning {
 		this.sigmaPercent = sigmaPercent;
 		timer = new Timer(timeToRun);
 		timer.start();
-		
+		//initializeQtable();
 		runReinforcement();
 	}
 	
 	public void runReinforcement() {
 		
 		do {
-			initializeQtable();
+			
 			int randomXCoordinate = ThreadLocalRandom.current().nextInt(0, board.width);
 			int randomYCoordinate = ThreadLocalRandom.current().nextInt(0, board.height);
+			
+			System.out.println("Starting at: (" + randomXCoordinate + " " + randomYCoordinate + ")");
+			
 			Integer initCordValue = board.boardInt[randomYCoordinate][randomXCoordinate];
 			Coordinate currentCoordinate = new Coordinate(CoordinateType.CURRENT, randomXCoordinate,randomYCoordinate,initCordValue);
 			learn(currentCoordinate);
