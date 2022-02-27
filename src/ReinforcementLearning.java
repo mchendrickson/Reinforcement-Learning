@@ -22,7 +22,7 @@ public class ReinforcementLearning {
 	}
 	
 	public void runReinforcement() {
-		
+
 		do {
 			
 			int randomXCoordinate = ThreadLocalRandom.current().nextInt(0, board.width);
@@ -161,7 +161,7 @@ public class ReinforcementLearning {
 	private Direction calculateBestDirection(Coordinate currCoord) {
 	
 		Direction bestDir = null;
-		float highestValue = -1 * Float.MAX_VALUE;
+		float highestValue = Float.NEGATIVE_INFINITY;
 		Direction dir = null;
 		
 		//Calculate for each direction
@@ -278,14 +278,14 @@ public class ReinforcementLearning {
 		}
 		
 		System.out.println("\nDir " + dir);
-		
+
 		System.out.println("topVal " + topVal);
 		System.out.println("bottomVal " + bottomVal);
 		System.out.println("leftVal " + leftVal);
 		System.out.println("rightVal " + rightVal);
-		
+
 		System.out.println("\n\n");
-		
+
 		//Assign multiplication weights based on what direction we travel. (It is impossible to travel backwards)
 		switch(dir) {
 		
