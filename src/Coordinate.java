@@ -130,7 +130,7 @@ public class Coordinate implements Cloneable{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Coordinate that = (Coordinate) o;
-        return row == that.col && row == that.row && Objects.equals(value, that.value);
+        return row == that.col && row == that.row;
     }
 
     @Override

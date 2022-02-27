@@ -93,11 +93,13 @@ public class ReinforcementLearning {
 //	}
 
 	public void learn(Coordinate currCoord){
+		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 		for(Coordinate c: board.terminalStates){ //check if on terminal state
 			if(currCoord.equals(c)){
 				return; //return if terminal
 			}
 		}
+		board.printBoard();
 		Direction dir = calculateBestDirection(currCoord); // if not, make move
 		//updateQtable(currCoord,dir);
 
@@ -121,7 +123,7 @@ public class ReinforcementLearning {
 				}
 				break;
 			case DOWN:
-				if(currCoord.row == board.height){ // check if at bottom bound
+				if(currCoord.row == board.height - 1){ // check if at bottom bound
 					learn(currCoord);
 					break;
 				}
@@ -139,7 +141,7 @@ public class ReinforcementLearning {
 				}
 				break;
 			case RIGHT:
-				if(currCoord.col == 0){ // check if at right bound
+				if(currCoord.col == board.width - 1){ // check if at right bound
 					learn(currCoord);
 					break;
 				}

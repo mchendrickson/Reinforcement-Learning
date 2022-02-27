@@ -47,6 +47,14 @@ public class Board {
         }
     }
 
+    public void printBoard() {
+        for (int i = 0; i < this.height; i++) {
+            for (int j = 0; j < this.width; j++) {
+                System.out.print(this.board[i][j].value + "\t \t");
+            }
+            System.out.println();
+        }
+    }
 
     public int getHeight() {
         return height;
