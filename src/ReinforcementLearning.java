@@ -28,7 +28,7 @@ public class ReinforcementLearning {
 			int randomXCoordinate = ThreadLocalRandom.current().nextInt(0, board.width);
 			int randomYCoordinate = ThreadLocalRandom.current().nextInt(0, board.height);
 			
-			//System.out.println("Starting at: (" + randomXCoordinate + " " + randomYCoordinate + ")");
+			System.out.println("Starting at: (" + randomXCoordinate + " " + randomYCoordinate + ")");
 			
 			Integer initCordValue = board.boardInt[randomYCoordinate][randomXCoordinate];
 			Coordinate currentCoordinate = new Coordinate(CoordinateType.CURRENT, randomXCoordinate,randomYCoordinate,initCordValue);
@@ -235,8 +235,8 @@ public class ReinforcementLearning {
 		
 		//Initialize points
 		Point top, bottom, left, right;
-		top = new Point(currCoord.col, currCoord.row + 1);
-		bottom = new Point(currCoord.col, currCoord.row - 1);
+		top = new Point(currCoord.col, currCoord.row - 1);
+		bottom = new Point(currCoord.col, currCoord.row + 1);
 		left = new Point(currCoord.col - 1, currCoord.row);
 		right = new Point(currCoord.col + 1, currCoord.row);
 		
@@ -253,31 +253,38 @@ public class ReinforcementLearning {
 		double rightValMult = 0;
 		
 		//Get the value of the coordinate on the board. If it doesn't exist, simply return the cost to bounce back (the constant reward)
-		if(top.y < board.height) {
+		if(top.y <= 0) {
 			topVal = board.getBoard()[top.y][top.x].getValue();
-
 		}else {
-			topVal = constantReward;
+			topVal = constantReward + currCoord.getValue();
 		}
 		
-		if(bottom.y >= 0) {
+		if(bottom.y < board.height) {
 			bottomVal = board.getBoard()[bottom.y][bottom.x].getValue();
 		}else {
-			bottomVal = constantReward;
+			bottomVal = constantReward + currCoord.getValue();
 		}
 		
 		if(left.x >= 0) {
 			leftVal = board.getBoard()[left.y][left.x].getValue();
 		}else {
-			leftVal = constantReward;
+			leftVal = constantReward + currCoord.getValue();
 		}
 		
 		if(right.x < board.width) {
 			rightVal = board.getBoard()[right.y][right.x].getValue();
 		}else {
-			rightVal = constantReward;
+			rightVal = constantReward + currCoord.getValue();
 		}
 		
+		System.out.println("\nDir " + dir);
+		
+		System.out.println("topVal " + topVal);
+		System.out.println("bottomVal " + bottomVal);
+		System.out.println("leftVal " + leftVal);
+		System.out.println("rightVal " + rightVal);
+		
+		System.out.println("\n\n");
 		
 		//Assign multiplication weights based on what direction we travel. (It is impossible to travel backwards)
 		switch(dir) {
