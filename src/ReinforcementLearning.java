@@ -47,30 +47,42 @@ public class ReinforcementLearning {
 		finalPrint();
 	}
 
-	public void updateQTable(Coordinate currCoord, Direction dir){
+	public Coordinate updateQTable(Coordinate currCoord, Direction dir){
 		Coordinate nextCoord;
+		Point top, bottom, left, right;
+		top = new Point(currCoord.col, currCoord.row - 1);
+		bottom = new Point(currCoord.col, currCoord.row + 1);
+		left = new Point(currCoord.col - 1, currCoord.row);
+		right = new Point(currCoord.col + 1, currCoord.row);
 		switch(dir){
 			case LEFT:
-				nextCoord =  board.getBoard()[currCoord.row][currCoord.col - 1];
-				currCoord.leftCost = currCoord.leftCost + probDesiredDirection*(constantReward + 1*(nextCoord.highestFloat())) - currCoord.leftCost;
-
+				if(left.x >= 0) {
+					nextCoord = board.getBoard()[currCoord.row][currCoord.col - 1];
+					currCoord.leftCost = currCoord.leftCost + probDesiredDirection * (constantReward + 1 * (nextCoord.value)) - currCoord.leftCost;
+				}
 				break;
 			case RIGHT:
-				nextCoord =  board.getBoard()[currCoord.row][currCoord.col + 1];
-				currCoord.rightCost = currCoord.rightCost + probDesiredDirection*(constantReward + 1*(nextCoord.highestFloat())) - currCoord.rightCost;
+				if(right.x < board.width) {
+					nextCoord = board.getBoard()[currCoord.row][currCoord.col + 1];
+					currCoord.rightCost = currCoord.rightCost + probDesiredDirection * (constantReward + 1 * (nextCoord.value)) - currCoord.rightCost;
+				}
 				break;
 			case UP:
-				nextCoord =  board.getBoard()[currCoord.row - 1][currCoord.col];
-				currCoord.upCost = currCoord.upCost + probDesiredDirection*(constantReward + 1*(nextCoord.highestFloat())) - currCoord.upCost;
+				if(top.y >= 0) {
+					nextCoord = board.getBoard()[currCoord.row - 1][currCoord.col];
+					currCoord.upCost = currCoord.upCost + probDesiredDirection * (constantReward + 1 * (nextCoord.value) - currCoord.upCost);
+				}
 				break;
 
 			case DOWN:
-				nextCoord =  board.getBoard()[currCoord.row + 1][currCoord.col];
-				currCoord.downCost = currCoord.downCost + probDesiredDirection*(constantReward + 1*(nextCoord.highestFloat())) - currCoord.downCost;
+				if(bottom.y < board.height) {
+					nextCoord = board.getBoard()[currCoord.row + 1][currCoord.col];
+					currCoord.downCost = currCoord.downCost + probDesiredDirection * (constantReward + 1 * (nextCoord.value) - currCoord.downCost);
+				}
 				break;
 		}
 
-		board.board[currCoord.row][currCoord.col] = currCoord;
+		return currCoord;
 
 	}
 
@@ -94,10 +106,10 @@ public class ReinforcementLearning {
 								finalPrint[row][col] = "^";
 								break;
 							case LEFT:
-								finalPrint[row][col] = "<\t";
+								finalPrint[row][col] = "<";
 								break;
 							case RIGHT:
-								finalPrint[row][col] = ">\t";
+								finalPrint[row][col] = ">";
 								break;
 							case DOWN:
 								finalPrint[row][col] = "v";
@@ -151,7 +163,9 @@ public class ReinforcementLearning {
 		else {
 			dir = calculateBestDirection(currCoord); //get the best direction to move based on values in the board
 		}
-
+		currCoord = updateQTable(currCoord,calculateBestDirection(currCoord));
+//		System.out.println();
+//		board.printBoard();
 		//Clone the coordinate, add it to the board with the updated value
 		Coordinate newCoord = currCoord.clone();
 		if(explore) {
