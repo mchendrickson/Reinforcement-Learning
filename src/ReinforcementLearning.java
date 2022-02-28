@@ -94,24 +94,55 @@ public class ReinforcementLearning {
 	 * @param currCoord
 	 */
 	public void learn(Coordinate currCoord){
-
+		boolean explore = false; //check if we are exploring in which case we update qTable with move cost instead of the highest move cost
 		for(Coordinate c: board.terminalStates){ //check if on terminal state
 			if(currCoord.equals(c)){
 				return; //return if terminal state
 			}
 		}
+		Direction dir = null;
+		//Math.random() generates a value between 0.0 and 1.0, if that number is lower than sigmaPercent, we move in a random direction (exploration)
+		if(Math.random() <= sigmaPercent) {
+			explore = true; // we are exploring
+			int i = ThreadLocalRandom.current().nextInt(0, 4);
 
-		Direction dir = calculateBestDirection(currCoord); //get the best direction to move based on values in the board
-
+			//Move in a random direction
+			switch(i) {
+				case 0:
+					dir = Direction.UP;
+					break;
+				case 1:
+					dir = Direction.DOWN;
+					break;
+				case 2:
+					dir = Direction.RIGHT;
+					break;
+				case 3:
+					dir = Direction.LEFT;
+					break;
+			}
+		}
+		else {
+			dir = calculateBestDirection(currCoord); //get the best direction to move based on values in the board
+		}
 
 		//Clone the coordinate, add it to the board with the updated value
-		float highestFloat = currCoord.highestFloat();
 		Coordinate newCoord = currCoord.clone();
-		if(currCoord.getType() != CoordinateType.TERMINAL) {
-			newCoord.value = highestFloat;
-			this.board.board[currCoord.row][currCoord.col] = newCoord;
-			
+		if(explore) {
+			float moveFloat = calculateCoordinateValue(currCoord, dir); // cost for move with explore
+			if (currCoord.getType() != CoordinateType.TERMINAL) {
+				newCoord.value = moveFloat;
+				this.board.board[currCoord.row][currCoord.col] = newCoord;
+			}
 		}
+		else{
+			float highestFloat = currCoord.highestFloat();
+			if(currCoord.getType() != CoordinateType.TERMINAL) {
+				newCoord.value = highestFloat;
+				this.board.board[currCoord.row][currCoord.col] = newCoord;
+			}
+		}
+
 		
 		//System.out.println("Currently at: (" + currCoord.col + " " + currCoord.row + ") " + "Moving: " + dir);
 		
@@ -154,6 +185,8 @@ public class ReinforcementLearning {
 					learn(new Coordinate(currCoord.type, currCoord.col + 1, currCoord.row, board.board[currCoord.row][currCoord.col+1].value));
 				}
 				break;
+			default:
+				break;
 		}
 	}
 	
@@ -194,28 +227,7 @@ public class ReinforcementLearning {
 				bestDir = dir;
 			}
 		}
-		
-		//Math.random() generates a value between 0.0 and 1.0, if that number is lower than sigmaPercent, we move in a random direction (exploration)
-		if(Math.random() <= sigmaPercent) {
-			int i = ThreadLocalRandom.current().nextInt(0, 4);
 
-			//Move in a random direction
-			switch(i) {
-			case 0:
-				bestDir = Direction.UP;
-				break;
-			case 1:
-				bestDir = Direction.DOWN;
-				break;
-			case 2:
-				bestDir = Direction.RIGHT;
-				break;
-			case 3:
-				bestDir = Direction.LEFT;
-				break;
-			}				
-		}
-		
 		return bestDir;
 		
 	}
