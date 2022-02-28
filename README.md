@@ -10,7 +10,7 @@ Matthew Hendrickson, Josh Unger, Yveder Joseph
 
 Take note: Java 16 or higher is likely required to run this program
 
-Example command line input: java "C:\Users\My PC\Desktop\CS4341Assignment4\sample.txt" 10 0.9 -0.05
+Example command line input: java "C:\Users\My PC\Desktop\CS4341Assignment4\sample.txt" 10 0.8 -0.05
 
 Example program output:
 
