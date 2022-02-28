@@ -26,7 +26,7 @@ public class Main {
         }
 
         //Probability of moving a random direction
-        float epsilonPercent = 0.1f;
+        float epsilonPercent = 0.025f;
 
         openFile(args[0]);
         printBoard(boardFile);
