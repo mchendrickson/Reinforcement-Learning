@@ -50,6 +50,7 @@ public class ReinforcementLearning {
 	public Coordinate updateQTable(Coordinate currCoord, Direction dir){
 		Coordinate nextCoord;
 		Point top, bottom, left, right;
+		float alpha = (float) 0.10;
 		top = new Point(currCoord.col, currCoord.row - 1);
 		bottom = new Point(currCoord.col, currCoord.row + 1);
 		left = new Point(currCoord.col - 1, currCoord.row);
@@ -58,26 +59,26 @@ public class ReinforcementLearning {
 			case LEFT:
 				if(left.x >= 0) {
 					nextCoord = board.getBoard()[currCoord.row][currCoord.col - 1];
-					currCoord.leftCost = currCoord.leftCost + probDesiredDirection * (constantReward + 1 * (nextCoord.value)) - currCoord.leftCost;
+					currCoord.leftCost = currCoord.leftCost + alpha * (constantReward + 1 * (nextCoord.value)) - currCoord.leftCost;
 				}
 				break;
 			case RIGHT:
 				if(right.x < board.width) {
 					nextCoord = board.getBoard()[currCoord.row][currCoord.col + 1];
-					currCoord.rightCost = currCoord.rightCost + probDesiredDirection * (constantReward + 1 * (nextCoord.value)) - currCoord.rightCost;
+					currCoord.rightCost = currCoord.rightCost + alpha * (constantReward + 1 * (nextCoord.value)) - currCoord.rightCost;
 				}
 				break;
 			case UP:
 				if(top.y >= 0) {
 					nextCoord = board.getBoard()[currCoord.row - 1][currCoord.col];
-					currCoord.upCost = currCoord.upCost + probDesiredDirection * (constantReward + 1 * (nextCoord.value) - currCoord.upCost);
+					currCoord.upCost = currCoord.upCost + alpha * (constantReward + 1 * (nextCoord.value) - currCoord.upCost);
 				}
 				break;
 
 			case DOWN:
 				if(bottom.y < board.height) {
 					nextCoord = board.getBoard()[currCoord.row + 1][currCoord.col];
-					currCoord.downCost = currCoord.downCost + probDesiredDirection * (constantReward + 1 * (nextCoord.value) - currCoord.downCost);
+					currCoord.downCost = currCoord.downCost + alpha * (constantReward + 1 * (nextCoord.value) - currCoord.downCost);
 				}
 				break;
 		}
