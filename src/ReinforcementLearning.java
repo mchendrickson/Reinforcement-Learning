@@ -37,7 +37,7 @@ public class ReinforcementLearning {
 			int randomXCoordinate = ThreadLocalRandom.current().nextInt(0, board.width);
 			int randomYCoordinate = ThreadLocalRandom.current().nextInt(0, board.height);
 			
-			System.out.println("Starting at: (" + randomXCoordinate + " " + randomYCoordinate + ")");
+			//System.out.println("Starting at: (" + randomXCoordinate + " " + randomYCoordinate + ")");
 			
 			Integer initCordValue = board.boardInt[randomYCoordinate][randomXCoordinate];
 			Coordinate currentCoordinate = new Coordinate(CoordinateType.CURRENT, randomXCoordinate,randomYCoordinate,initCordValue);
@@ -48,7 +48,7 @@ public class ReinforcementLearning {
 	}
 
 	public Coordinate updateQTable(Coordinate currCoord, Direction dir){
-		Coordinate nextCoord;
+		Coordinate nextCoord = null;
 		Point top, bottom, left, right;
 		float alpha = (float) 0.10;
 		top = new Point(currCoord.col, currCoord.row - 1);
@@ -59,26 +59,26 @@ public class ReinforcementLearning {
 			case LEFT:
 				if(left.x >= 0) {
 					nextCoord = board.getBoard()[currCoord.row][currCoord.col - 1];
-					currCoord.leftCost = currCoord.leftCost + alpha * (constantReward + 1 * (nextCoord.value)) - currCoord.leftCost;
+					currCoord.leftCost = currCoord.leftCost + (alpha * (constantReward + nextCoord.value - currCoord.leftCost));
 				}
 				break;
 			case RIGHT:
 				if(right.x < board.width) {
 					nextCoord = board.getBoard()[currCoord.row][currCoord.col + 1];
-					currCoord.rightCost = currCoord.rightCost + alpha * (constantReward + 1 * (nextCoord.value)) - currCoord.rightCost;
+					currCoord.rightCost = currCoord.rightCost + (alpha * (constantReward + nextCoord.value - currCoord.rightCost));
 				}
 				break;
 			case UP:
 				if(top.y >= 0) {
 					nextCoord = board.getBoard()[currCoord.row - 1][currCoord.col];
-					currCoord.upCost = currCoord.upCost + alpha * (constantReward + 1 * (nextCoord.value) - currCoord.upCost);
+					currCoord.upCost = currCoord.upCost + (alpha * (constantReward + nextCoord.value - currCoord.upCost));
 				}
 				break;
 
 			case DOWN:
 				if(bottom.y < board.height) {
 					nextCoord = board.getBoard()[currCoord.row + 1][currCoord.col];
-					currCoord.downCost = currCoord.downCost + alpha * (constantReward + 1 * (nextCoord.value) - currCoord.downCost);
+					currCoord.downCost = currCoord.downCost + (alpha * (constantReward + 1 * (nextCoord.value) - currCoord.downCost));
 				}
 				break;
 		}
@@ -165,8 +165,8 @@ public class ReinforcementLearning {
 			dir = calculateBestDirection(currCoord); //get the best direction to move based on values in the board
 		}
 		currCoord = updateQTable(currCoord,calculateBestDirection(currCoord));
-//		System.out.println();
-//		board.printBoard();
+		System.out.println();
+		board.printBoard();
 		//Clone the coordinate, add it to the board with the updated value
 		Coordinate newCoord = currCoord.clone();
 		if(explore) {
@@ -185,7 +185,7 @@ public class ReinforcementLearning {
 		}
 
 
-		//System.out.println("Currently at: (" + currCoord.col + " " + currCoord.row + ") " + "Moving: " + dir);
+		System.out.println("Currently at: (" + currCoord.col + " " + currCoord.row + ") " + "Moving: " + dir);
 
 		if(!explore) {
 			//chance to go in the not desired direction via randomness
@@ -297,55 +297,6 @@ public class ReinforcementLearning {
 		}else if(currCoord.downCost == highestValue){
 			bestDir = Direction.DOWN;
 		}
-		//Calculate for each direction
-//		for(int i = 0; i <= 3; i++) {
-//
-//			switch(i) {
-//			case 0:
-//				dir = Direction.UP;
-//				break;
-//			case 1:
-//				dir = Direction.DOWN;
-//				break;
-//			case 2:
-//				dir = Direction.RIGHT;
-//				break;
-//			case 3:
-//				dir = Direction.LEFT;
-//				break;
-//			}
-//
-//			float currValue = calculateCoordinateValue(currCoord, dir); //Get the value of the specific direction
-//
-//			if(currValue >= highestValue) {
-//				highestValue = currValue;
-//				bestDir = dir;
-//			}
-//		}
-//
-//		//If the random value is high enough, just go in any random direction
-//		Random rand = new Random();
-//
-//		//Math.random() generates a value between 0.0 and 1.0, if that number is lower than sigmaPercent, we move in a random direction (exploration)
-//		if(Math.random() <= sigmaPercent) {
-//			int i = ThreadLocalRandom.current().nextInt(0, 4);
-//
-//			//Move in a random direction
-//			switch(i) {
-//			case 0:
-//				bestDir = Direction.UP;
-//				break;
-//			case 1:
-//				bestDir = Direction.DOWN;
-//				break;
-//			case 2:
-//				bestDir = Direction.RIGHT;
-//				break;
-//			case 3:
-//				bestDir = Direction.LEFT;
-//				break;
-//			}
-//		}
 		
 		return bestDir;
 		
