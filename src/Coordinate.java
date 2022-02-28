@@ -10,6 +10,17 @@ public class Coordinate implements Cloneable{
     float rightCost;
     float downCost;
 
+    /**
+     * Create a coordinate with all the required data
+     * @param type
+     * @param colCoordinate
+     * @param rowCoordinate
+     * @param value
+     * @param upCost
+     * @param leftCost
+     * @param rightCost
+     * @param downCost
+     */
     public Coordinate(CoordinateType type, int colCoordinate, int rowCoordinate, float value, float upCost, float leftCost, float rightCost, float downCost) {
         this.type = type;
         this.col = colCoordinate;
@@ -21,6 +32,10 @@ public class Coordinate implements Cloneable{
         this.downCost = downCost;
     }
 
+    /**
+     * Get the highest value of each of the move costs
+     * @return highestValue
+     */
     public float highestFloat(){
         float currHighest = this.upCost;
         if(currHighest < this.downCost){
@@ -35,6 +50,10 @@ public class Coordinate implements Cloneable{
         return currHighest;
     }
 
+    /**
+     * Get the best direction to travel in based on values
+     * @return
+     */
     public Direction highestDir(){
         Direction currHighestDir = Direction.UP;
         float currHighest = this.upCost;
@@ -53,6 +72,13 @@ public class Coordinate implements Cloneable{
         return currHighestDir;
     }
 
+    /**
+     * For terminal state coordinates which don't need directional costs
+     * @param type
+     * @param colCoordinate
+     * @param rowCoordinate
+     * @param value
+     */
     public Coordinate(CoordinateType type, int colCoordinate, int rowCoordinate, float value) {
         this.type = type;
         this.col = colCoordinate;

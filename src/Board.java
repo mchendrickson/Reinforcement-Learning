@@ -8,15 +8,12 @@ public class Board {
     Coordinate[][] board;
     ArrayList<Coordinate> terminalStates;
 
-
-    public Board(int height, int width) {
-        this.height = height;
-        this.width = width;
-        this.boardInt = new Integer[height][width];
-        this.board = new Coordinate[height][width];
-        this.terminalStates = new ArrayList<Coordinate>();
-    }
-
+    /**
+     * Board constructor
+     * @param height
+     * @param width
+     * @param board
+     */
     public Board(int height, int width, Integer[][] board) {
         this.height = height;
         this.width = width;
@@ -25,10 +22,17 @@ public class Board {
         initializeBoard();
     }
 
+    /**
+     * Getter for board
+     * @return board
+     */
     public Coordinate[][] getBoard() {
         return board;
     }
 
+    /**
+     * Convert the integer double array to a coordinate double array
+     */
     private void initializeBoard() {
         terminalStates = new ArrayList<Coordinate>();
     	for (int row = 0; row < height; row++) {
@@ -47,6 +51,9 @@ public class Board {
         }
     }
 
+    /**
+     * A debugger method to print out the current values of the coordinate board
+     */
     public void printBoard() {
     	DecimalFormat df = new DecimalFormat("#.##");
 
@@ -59,10 +66,18 @@ public class Board {
         }
     }
 
+    /**
+     * Getter for height
+     * @return height
+     */
     public int getHeight() {
         return height;
     }
-
+    
+    /**
+     * Getter for width
+     * @return height
+     */
     public int getWidth() {
         return width;
     }

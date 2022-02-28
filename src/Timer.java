@@ -7,7 +7,6 @@ public class Timer extends Thread {
 
 	/**
 	 * Main constructor
-	 * 
 	 * @param timerTime
 	 */
 	public Timer(float timerTime) {
@@ -30,7 +29,6 @@ public class Timer extends Thread {
 
 	/**
 	 * Determines if the time is done
-	 * 
 	 * @return true if timer is finished
 	 */
 	public boolean finished() {

@@ -6,25 +6,35 @@ import java.util.HashMap;
 public class ReinforcementLearning {
 	private Board board;
 	private Timer timer;
-	private HashMap<int[],float[]> qTable =  new HashMap<int[],float[]>();
-	private float timeToRun, probDesiredDirection, constantReward, sigmaPercent;
+	private float probDesiredDirection, constantReward, sigmaPercent;
 
+	/**
+	 * Constructor for ReinforcementLearning
+	 * @param board
+	 * @param timeToRun
+	 * @param probDesiredDirection
+	 * @param constantReward
+	 * @param sigmaPercent
+	 */
 	public ReinforcementLearning(Board board, float timeToRun, float probDesiredDirection, float constantReward, float sigmaPercent) {
 		this.board = board;
-		this.timeToRun = timeToRun;
 		this.probDesiredDirection = probDesiredDirection;
 		this.constantReward = constantReward;
 		this.sigmaPercent = sigmaPercent;
 		timer = new Timer(timeToRun);
 		timer.start();
-		//initializeQtable();
+
 		runReinforcement();
 	}
 	
+	/**
+	 * Method that runs for as long as the timer is set and calls learn, the method that updates the board values
+	 */
 	public void runReinforcement() {
 
+		//Run for only as long as the timer runs
 		do {
-			
+			//Find a random coordinate
 			int randomXCoordinate = ThreadLocalRandom.current().nextInt(0, board.width);
 			int randomYCoordinate = ThreadLocalRandom.current().nextInt(0, board.height);
 			
@@ -32,36 +42,15 @@ public class ReinforcementLearning {
 			
 			Integer initCordValue = board.boardInt[randomYCoordinate][randomXCoordinate];
 			Coordinate currentCoordinate = new Coordinate(CoordinateType.CURRENT, randomXCoordinate,randomYCoordinate,initCordValue);
-			learn(currentCoordinate);
+			learn(currentCoordinate); //recursive method
 		}
 		while(!timer.finished());
-		finalPrint();
+		finalPrint(); //Print out our result
 	}
 
-	private void updateQtable(Coordinate currCoord, Direction dir) {
-		int[] key = {currCoord.col, currCoord.row};
-		float[] values = qTable.get(key);
-		switch (dir) {
-			case UP:
-				values[0] = currCoord.getUpCost();
-				qTable.put(key, values);
-				break;
-			case LEFT:
-				values[1] = currCoord.getLeftCost();
-				qTable.put(key, values);
-				break;
-			case RIGHT:
-				values[2] = currCoord.getRightCost();
-				qTable.put(key, values);
-				break;
-			case DOWN:
-				values[3] = currCoord.getDownCost();
-				qTable.put(key, values);
-				break;
-		}
-	}
-
-
+	/**
+	 * Prints the final result (with arrows)
+	 */
 	public void finalPrint(){
 		String[][] finalPrint = new String[board.height][board.width];
 		for(int row = 0; row < board.height; row++) {
@@ -100,18 +89,22 @@ public class ReinforcementLearning {
 		}
 	}
 
+	/**
+	 * Search for a goal state
+	 * @param currCoord
+	 */
 	public void learn(Coordinate currCoord){
-		//System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+
 		for(Coordinate c: board.terminalStates){ //check if on terminal state
 			if(currCoord.equals(c)){
-				//System.out.println("Found Terminal State");
-				return; //return if terminal
+				return; //return if terminal state
 			}
 		}
-		//board.printBoard();
-		Direction dir = calculateBestDirection(currCoord); // if not, make move
-		//updateQtable(currCoord,dir);
 
+		Direction dir = calculateBestDirection(currCoord); //get the best direction to move based on values in the board
+
+
+		//Clone the coordinate, add it to the board with the updated value
 		float highestFloat = currCoord.highestFloat();
 		Coordinate newCoord = currCoord.clone();
 		if(currCoord.getType() != CoordinateType.TERMINAL) {
@@ -119,11 +112,10 @@ public class ReinforcementLearning {
 			this.board.board[currCoord.row][currCoord.col] = newCoord;
 			
 		}
-
-
-		//todo - save new qMax float in table?
 		
 		//System.out.println("Currently at: (" + currCoord.col + " " + currCoord.row + ") " + "Moving: " + dir);
+		
+		//Check and make sure we haven't hit a boundary 
 		switch(dir){
 	
 			case UP:
@@ -169,7 +161,7 @@ public class ReinforcementLearning {
 	private Direction calculateBestDirection(Coordinate currCoord) {
 	
 		Direction bestDir = null;
-		float highestValue = Float.NEGATIVE_INFINITY;
+		float highestValue = Float.NEGATIVE_INFINITY; //Needed so that high negative edge weights don't break our code
 		Direction dir = null;
 		
 		//Calculate for each direction
@@ -192,14 +184,12 @@ public class ReinforcementLearning {
 			
 			float currValue = calculateCoordinateValue(currCoord, dir); //Get the value of the specific direction
 			
+			//replace the current value with the highest
 			if(currValue >= highestValue) {
 				highestValue = currValue;
 				bestDir = dir;
 			}
 		}
-		
-		//If the random value is high enough, just go in any random direction
-		Random rand = new Random();
 		
 		//Math.random() generates a value between 0.0 and 1.0, if that number is lower than sigmaPercent, we move in a random direction (exploration)
 		if(Math.random() <= sigmaPercent) {
@@ -226,19 +216,12 @@ public class ReinforcementLearning {
 		
 	}
 
-	public void initializeQtable(){
-		int height = this.board.height;
-		int width = this.board.width;
-
-		for (int i = 0; i < width; i++) {
-			for (int j = 0; j < height; j++) {
-				int key[] = {i,j};
-				float values[] = {0,0,0,0};
-				qTable.put(key,values);
-			}
-		}
-	}
-
+	/**
+	 * Calculate the highest coordinate value
+	 * @param currCoord
+	 * @param dir
+	 * @return value
+	 */
 	private float calculateCoordinateValue(Coordinate currCoord, Direction dir) {
 		
 		//Initialize points
