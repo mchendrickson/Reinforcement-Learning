@@ -130,70 +130,70 @@ public class ReinforcementLearning {
 		Coordinate newCoord = currCoord.clone();
 		if(explore) {
 			float moveFloat = calculateCoordinateValue(currCoord, dir); // cost for move with explore
-			if (currCoord.getType() != CoordinateType.TERMINAL) {
-				newCoord.value = moveFloat;
-				this.board.board[currCoord.row][currCoord.col] = newCoord;
+			if (currCoord.getType() != CoordinateType.TERMINAL) { // check if next move not terminal
+				newCoord.value = moveFloat; // update qTable
+				this.board.board[currCoord.row][currCoord.col] = newCoord; // save on coordinate board
 			}
 		}
 		else{
-			float highestFloat = currCoord.highestFloat();
-			if(currCoord.getType() != CoordinateType.TERMINAL) {
-				newCoord.value = highestFloat;
-				this.board.board[currCoord.row][currCoord.col] = newCoord;
+			float highestFloat = currCoord.highestFloat(); // cost to move when not exploring (recording the best value)
+			if(currCoord.getType() != CoordinateType.TERMINAL) { // check if terminal state (doesnt make update if)
+				newCoord.value = highestFloat;  // save value as highest float
+				this.board.board[currCoord.row][currCoord.col] = newCoord; // update coordinate board
 			}
 		}
 
 		
 		//System.out.println("Currently at: (" + currCoord.col + " " + currCoord.row + ") " + "Moving: " + dir);
 
-		//chance to go in the not desired direction via randomness
-		double notDesiredDir = Math.random();
-		boolean left = false;//chance to go left of attempted direction
-		boolean right = false;//change to go right from attempted direction
-		double NotDesiredChance = (1-probDesiredDirection)/2; //individual chance to go left vs right
-		if(notDesiredDir <= NotDesiredChance){ // check if chance is between 0 and half of 1-the chance to go the right way
-			left = true;//goes left from attempted direction
-		}
-		else if(notDesiredDir <= (2*notDesiredDir)){ // checks if greater than half of 1-the chance to go the right way but less than the chance to go the right way
-			right = true;//goes right from attempted direction
-		}
-		if(left || right) {//if we are going either left of right from the desired direction
-			switch(dir){
-				case UP:
-					if(left){
-						dir = Direction.LEFT;
-					}
-					if(right){
-						dir = Direction.RIGHT;
-					}
-					break;
-				case DOWN:
-					if(left){
-						dir = Direction.RIGHT;
-					}
-					if(right){
-						dir = Direction.LEFT;
-					}
-					break;
-				case LEFT:
-					if(left){
-						dir = Direction.DOWN;
-					}
-					if(right){
-						dir = Direction.UP;
-					}
-					break;
-				case RIGHT:
-					if(left){
-						dir = Direction.UP;
-					}
-					if(right){
-						dir = Direction.DOWN;
-					}
-					break;
+		if(!explore) {
+			//chance to go in the not desired direction via randomness
+			double notDesiredDir = Math.random();
+			boolean left = false;//chance to go left of attempted direction
+			boolean right = false;//change to go right from attempted direction
+			double NotDesiredChance = (1 - probDesiredDirection) / 2; //individual chance to go left vs right
+			if (notDesiredDir <= NotDesiredChance) { // check if chance is between 0 and half of 1-the chance to go the right way
+				left = true;//goes left from attempted direction
+			} else if (notDesiredDir <= (2 * notDesiredDir)) { // checks if greater than half of 1-the chance to go the right way but less than the chance to go the right way
+				right = true;//goes right from attempted direction
+			}
+			if (left || right) {//if we are going either left of right from the desired direction
+				switch (dir) {
+					case UP:
+						if (left) {
+							dir = Direction.LEFT;
+						}
+						if (right) {
+							dir = Direction.RIGHT;
+						}
+						break;
+					case DOWN:
+						if (left) {
+							dir = Direction.RIGHT;
+						}
+						if (right) {
+							dir = Direction.LEFT;
+						}
+						break;
+					case LEFT:
+						if (left) {
+							dir = Direction.DOWN;
+						}
+						if (right) {
+							dir = Direction.UP;
+						}
+						break;
+					case RIGHT:
+						if (left) {
+							dir = Direction.UP;
+						}
+						if (right) {
+							dir = Direction.DOWN;
+						}
+						break;
+				}
 			}
 		}
-
 			//Check and make sure we haven't hit a boundary
 		switch(dir){
 	
