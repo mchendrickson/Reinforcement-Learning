@@ -47,41 +47,36 @@ public class ReinforcementLearning {
 		finalPrint();
 	}
 
-	public Coordinate updateQTable(Coordinate currCoord, Direction dir){
+	public Coordinate calculateCosts(Coordinate currCoord){
 		Coordinate nextCoord = null;
+
 		Point top, bottom, left, right;
 		float alpha = (float) 0.10;
 		top = new Point(currCoord.col, currCoord.row - 1);
 		bottom = new Point(currCoord.col, currCoord.row + 1);
 		left = new Point(currCoord.col - 1, currCoord.row);
 		right = new Point(currCoord.col + 1, currCoord.row);
-		switch(dir){
-			case LEFT:
 				if(left.x >= 0) {
 					nextCoord = board.getBoard()[currCoord.row][currCoord.col - 1];
 					currCoord.leftCost = currCoord.leftCost + (alpha * (constantReward + nextCoord.value - currCoord.leftCost));
 				}
-				break;
-			case RIGHT:
+
+
 				if(right.x < board.width) {
 					nextCoord = board.getBoard()[currCoord.row][currCoord.col + 1];
 					currCoord.rightCost = currCoord.rightCost + (alpha * (constantReward + nextCoord.value - currCoord.rightCost));
 				}
-				break;
-			case UP:
+
 				if(top.y >= 0) {
 					nextCoord = board.getBoard()[currCoord.row - 1][currCoord.col];
 					currCoord.upCost = currCoord.upCost + (alpha * (constantReward + nextCoord.value - currCoord.upCost));
 				}
-				break;
 
-			case DOWN:
 				if(bottom.y < board.height) {
 					nextCoord = board.getBoard()[currCoord.row + 1][currCoord.col];
 					currCoord.downCost = currCoord.downCost + (alpha * (constantReward + 1 * (nextCoord.value) - currCoord.downCost));
 				}
-				break;
-		}
+
 
 		return currCoord;
 
@@ -133,6 +128,7 @@ public class ReinforcementLearning {
 	 * @param currCoord
 	 */
 	public void learn(Coordinate currCoord){
+		currCoord =calculateCosts(currCoord);
 		boolean explore = false; //check if we are exploring in which case we update qTable with move cost instead of the highest move cost
 		for(Coordinate c: board.terminalStates){ //check if on terminal state
 			if(currCoord.equals(c)){
@@ -164,15 +160,15 @@ public class ReinforcementLearning {
 		else {
 			dir = calculateBestDirection(currCoord); //get the best direction to move based on values in the board
 		}
-		currCoord = updateQTable(currCoord,calculateBestDirection(currCoord));
+
 		System.out.println();
 		board.printBoard();
 		//Clone the coordinate, add it to the board with the updated value
 		Coordinate newCoord = currCoord.clone();
 		if(explore) {
-			float moveFloat = calculateCoordinateValue(currCoord, dir); // cost for move with explore
+			float highestFloat = currCoord.highestFloat(); // cost for move with explore
 			if (currCoord.getType() != CoordinateType.TERMINAL) { // check if next move not terminal
-				newCoord.value = moveFloat; // update qTable
+				newCoord.value =  highestFloat; // update qTable
 				this.board.board[currCoord.row][currCoord.col] = newCoord; // save on coordinate board
 			}
 		}
