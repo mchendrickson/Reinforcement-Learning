@@ -128,7 +128,6 @@ public class ReinforcementLearning {
 	 * @param currCoord
 	 */
 	public void learn(Coordinate currCoord){
-		currCoord =calculateCosts(currCoord);
 		boolean explore = false; //check if we are exploring in which case we update qTable with move cost instead of the highest move cost
 		for(Coordinate c: board.terminalStates){ //check if on terminal state
 			if(currCoord.equals(c)){
@@ -160,7 +159,7 @@ public class ReinforcementLearning {
 		else {
 			dir = calculateBestDirection(currCoord); //get the best direction to move based on values in the board
 		}
-
+		currCoord =calculateCosts(currCoord);
 		System.out.println();
 		board.printBoard();
 		//Clone the coordinate, add it to the board with the updated value
