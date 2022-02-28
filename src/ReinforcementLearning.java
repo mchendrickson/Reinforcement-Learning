@@ -6,7 +6,7 @@ import java.util.HashMap;
 public class ReinforcementLearning {
 	private Board board;
 	private Timer timer;
-	private float probDesiredDirection, constantReward, sigmaPercent;
+	private float probDesiredDirection, constantReward, epsilonPercent;
 
 	/**
 	 * Constructor for ReinforcementLearning
@@ -16,11 +16,11 @@ public class ReinforcementLearning {
 	 * @param constantReward
 	 * @param sigmaPercent
 	 */
-	public ReinforcementLearning(Board board, float timeToRun, float probDesiredDirection, float constantReward, float sigmaPercent) {
+	public ReinforcementLearning(Board board, float timeToRun, float probDesiredDirection, float constantReward, float epsilonPercent) {
 		this.board = board;
 		this.probDesiredDirection = probDesiredDirection;
 		this.constantReward = constantReward;
-		this.sigmaPercent = sigmaPercent;
+		this.epsilonPercent = epsilonPercent;
 		timer = new Timer(timeToRun);
 		timer.start();
 
@@ -102,7 +102,7 @@ public class ReinforcementLearning {
 		}
 		Direction dir = null;
 		//Math.random() generates a value between 0.0 and 1.0, if that number is lower than sigmaPercent, we move in a random direction (exploration)
-		if(Math.random() <= sigmaPercent) {
+		if(Math.random() <= epsilonPercent) {
 			explore = true; // we are exploring
 			int i = ThreadLocalRandom.current().nextInt(0, 4);
 

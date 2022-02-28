@@ -26,7 +26,7 @@ public class Main {
         }
 
         //Probability of moving a random direction
-        float sigmaPercent = 0.1f;
+        float epsilonPercent = 0.1f;
 
         openFile(args[0]);
         printBoard(boardFile);
@@ -36,12 +36,12 @@ public class Main {
         Board b = new Board(boardHeight, boardWidth, boardFile);
         System.out.println("Running board of height: " + boardHeight + ", width " + boardWidth + " for " + timeToRun + " seconds ");
         System.out.println("Accuracy: " + probDesiredDirection * 100 + "%");
-        System.out.println("Epsilon: " + sigmaPercent * 100 + "%"); 
+        System.out.println("Epsilon: " + epsilonPercent * 100 + "%"); 
         System.out.println("Constant reward: " + constantReward);
         
         System.out.println();
         
-        ReinforcementLearning learning = new ReinforcementLearning(b, timeToRun, probDesiredDirection, constantReward, sigmaPercent);
+        ReinforcementLearning learning = new ReinforcementLearning(b, timeToRun, probDesiredDirection, constantReward, epsilonPercent);
         
         System.out.println();
     }
