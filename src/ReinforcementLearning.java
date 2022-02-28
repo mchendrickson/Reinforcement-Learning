@@ -38,27 +38,31 @@ public class ReinforcementLearning {
 		finalPrint();
 	}
 
-	private void updateQtable(Coordinate currCoord, Direction dir) {
-		int[] key = {currCoord.col, currCoord.row};
-		float[] values = qTable.get(key);
-		switch (dir) {
-			case UP:
-				values[0] = currCoord.getUpCost();
-				qTable.put(key, values);
-				break;
+	public void updateQTable(Coordinate currCoord, Direction dir){
+		Coordinate nextCoord;
+		switch(dir){
 			case LEFT:
-				values[1] = currCoord.getLeftCost();
-				qTable.put(key, values);
+				nextCoord =  board.getBoard()[currCoord.row][currCoord.col - 1];
+				currCoord.leftCost = currCoord.leftCost + probDesiredDirection*(constantReward + 1*(nextCoord.highestFloat())) - currCoord.leftCost;
+
 				break;
 			case RIGHT:
-				values[2] = currCoord.getRightCost();
-				qTable.put(key, values);
+				nextCoord =  board.getBoard()[currCoord.row][currCoord.col + 1];
+				currCoord.rightCost = currCoord.rightCost + probDesiredDirection*(constantReward + 1*(nextCoord.highestFloat())) - currCoord.rightCost;
 				break;
+			case UP:
+				nextCoord =  board.getBoard()[currCoord.row - 1][currCoord.col];
+				currCoord.upCost = currCoord.upCost + probDesiredDirection*(constantReward + 1*(nextCoord.highestFloat())) - currCoord.upCost;
+				break;
+
 			case DOWN:
-				values[3] = currCoord.getDownCost();
-				qTable.put(key, values);
+				nextCoord =  board.getBoard()[currCoord.row + 1][currCoord.col];
+				currCoord.downCost = currCoord.downCost + probDesiredDirection*(constantReward + 1*(nextCoord.highestFloat())) - currCoord.downCost;
 				break;
 		}
+
+		board.board[currCoord.row][currCoord.col] = currCoord;
+
 	}
 
 
@@ -110,7 +114,7 @@ public class ReinforcementLearning {
 		}
 		board.printBoard();
 		Direction dir = calculateBestDirection(currCoord); // if not, make move
-		//updateQtable(currCoord,dir);
+		updateQTable(currCoord,dir);
 
 		float highestFloat = currCoord.highestFloat();
 		Coordinate newCoord = currCoord.clone();
@@ -169,34 +173,41 @@ public class ReinforcementLearning {
 	private Direction calculateBestDirection(Coordinate currCoord) {
 	
 		Direction bestDir = null;
-		float highestValue = Float.NEGATIVE_INFINITY;
-		Direction dir = null;
-		
-		//Calculate for each direction
-		for(int i = 0; i <= 3; i++) {
-			
-			switch(i) {
-			case 0:
-				dir = Direction.UP;
-				break;
-			case 1:
-				dir = Direction.DOWN;
-				break;
-			case 2:
-				dir = Direction.RIGHT;
-				break;
-			case 3:
-				dir = Direction.LEFT;
-				break;
-			}
-			
-			float currValue = calculateCoordinateValue(currCoord, dir); //Get the value of the specific direction
-			
-			if(currValue >= highestValue) {
-				highestValue = currValue;
-				bestDir = dir;
-			}
+		float highestValue = currCoord.highestFloat();
+		if(currCoord.leftCost == highestValue){
+			bestDir = Direction.LEFT;
+		}else if(currCoord.rightCost == highestValue){
+			bestDir = Direction.RIGHT;
+		}else if(currCoord.upCost == highestValue){
+			bestDir = Direction.UP;
+		}else if(currCoord.downCost == highestValue){
+			bestDir = Direction.DOWN;
 		}
+		//Calculate for each direction
+//		for(int i = 0; i <= 3; i++) {
+//
+//			switch(i) {
+//			case 0:
+//				dir = Direction.UP;
+//				break;
+//			case 1:
+//				dir = Direction.DOWN;
+//				break;
+//			case 2:
+//				dir = Direction.RIGHT;
+//				break;
+//			case 3:
+//				dir = Direction.LEFT;
+//				break;
+//			}
+//
+//			float currValue = calculateCoordinateValue(currCoord, dir); //Get the value of the specific direction
+//
+//			if(currValue >= highestValue) {
+//				highestValue = currValue;
+//				bestDir = dir;
+//			}
+//		}
 		
 		//If the random value is high enough, just go in any random direction
 		Random rand = new Random();
