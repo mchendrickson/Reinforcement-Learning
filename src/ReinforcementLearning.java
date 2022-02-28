@@ -157,7 +157,11 @@ public class ReinforcementLearning {
 		}
 	}
 	
-	//Calculate which direction is the best direction to travel in
+	/**
+	 * Calculate which direction is the best direction to travel in
+	 * @param currCoord
+	 * @return dir
+	 */
 	private Direction calculateBestDirection(Coordinate currCoord) {
 	
 		Direction bestDir = null;
