@@ -14,7 +14,7 @@ public class ReinforcementLearning {
 	 * @param timeToRun
 	 * @param probDesiredDirection
 	 * @param constantReward
-	 * @param sigmaPercent
+	 * @param epsilonPercent
 	 */
 	public ReinforcementLearning(Board board, float timeToRun, float probDesiredDirection, float constantReward, float epsilonPercent) {
 		this.board = board;
@@ -145,8 +145,56 @@ public class ReinforcementLearning {
 
 		
 		//System.out.println("Currently at: (" + currCoord.col + " " + currCoord.row + ") " + "Moving: " + dir);
-		
-		//Check and make sure we haven't hit a boundary 
+
+		//chance to go in the not desired direction via randomness
+		double notDesiredDir = Math.random();
+		boolean left = false;//chance to go left of attempted direction
+		boolean right = false;//change to go right from attempted direction
+		double NotDesiredChance = (1-probDesiredDirection)/2; //individual chance to go left vs right
+		if(notDesiredDir <= NotDesiredChance){ // check if chance is between 0 and half of 1-the chance to go the right way
+			left = true;//goes left from attempted direction
+		}
+		else if(notDesiredDir <= (2*notDesiredDir)){ // checks if greater than half of 1-the chance to go the right way but less than the chance to go the right way
+			right = true;//goes right from attempted direction
+		}
+		if(left || right) {//if we are going either left of right from the desired direction
+			switch(dir){
+				case UP:
+					if(left){
+						dir = Direction.LEFT;
+					}
+					if(right){
+						dir = Direction.RIGHT;
+					}
+					break;
+				case DOWN:
+					if(left){
+						dir = Direction.RIGHT;
+					}
+					if(right){
+						dir = Direction.LEFT;
+					}
+					break;
+				case LEFT:
+					if(left){
+						dir = Direction.DOWN;
+					}
+					if(right){
+						dir = Direction.UP;
+					}
+					break;
+				case RIGHT:
+					if(left){
+						dir = Direction.UP;
+					}
+					if(right){
+						dir = Direction.DOWN;
+					}
+					break;
+			}
+		}
+
+			//Check and make sure we haven't hit a boundary
 		switch(dir){
 	
 			case UP:
@@ -189,7 +237,7 @@ public class ReinforcementLearning {
 				break;
 		}
 	}
-	
+
 	/**
 	 * Calculate which direction is the best direction to travel in
 	 * @param currCoord
