@@ -6,21 +6,30 @@ import java.util.HashMap;
 public class ReinforcementLearning {
 	private Board board;
 	private Timer timer;
-	private HashMap<int[],float[]> qTable =  new HashMap<int[],float[]>();
-	private float timeToRun, probDesiredDirection, constantReward, sigmaPercent;
+	private float probDesiredDirection, constantReward, epsilonPercent;
 
-	public ReinforcementLearning(Board board, float timeToRun, float probDesiredDirection, float constantReward, float sigmaPercent) {
+	/**
+	 * Constructor for ReinforcementLearning
+	 * @param board
+	 * @param timeToRun
+	 * @param probDesiredDirection
+	 * @param constantReward
+	 * @param epsilonPercent
+	 */
+	public ReinforcementLearning(Board board, float timeToRun, float probDesiredDirection, float constantReward, float epsilonPercent) {
 		this.board = board;
-		this.timeToRun = timeToRun;
 		this.probDesiredDirection = probDesiredDirection;
 		this.constantReward = constantReward;
-		this.sigmaPercent = sigmaPercent;
+		this.epsilonPercent = epsilonPercent;
 		timer = new Timer(timeToRun);
 		timer.start();
-		//initializeQtable();
+
 		runReinforcement();
 	}
 	
+	/**
+	 * Method that runs for as long as the timer is set and calls learn, the method that updates the board values
+	 */
 	public void runReinforcement() {
 
 		do {
@@ -65,7 +74,9 @@ public class ReinforcementLearning {
 
 	}
 
-
+	/**
+	 * Prints the final result (with arrows)
+	 */
 	public void finalPrint(){
 		String[][] finalPrint = new String[board.height][board.width];
 		for(int row = 0; row < board.height; row++) {
@@ -75,12 +86,12 @@ public class ReinforcementLearning {
 				CoordinateType type = printCoord.type;
 				switch(type){
 					case TERMINAL:
-						finalPrint[row][col] = String.valueOf(printCoord.value);
+						finalPrint[row][col] = String.valueOf((int)printCoord.value);
 						break;
 					case CURRENT:
 						switch (printDir){
 							case UP:
-								finalPrint[row][col] = "^\t";
+								finalPrint[row][col] = "^";
 								break;
 							case LEFT:
 								finalPrint[row][col] = "<\t";
@@ -89,7 +100,7 @@ public class ReinforcementLearning {
 								finalPrint[row][col] = ">\t";
 								break;
 							case DOWN:
-								finalPrint[row][col] = "v\t";
+								finalPrint[row][col] = "v";
 								break;
 						}
 						break;
@@ -98,36 +109,118 @@ public class ReinforcementLearning {
 		}
 		for(String[] s: finalPrint){
 			for(String s1 : s){
-				System.out.print(s1 + " ");
+				System.out.print(s1 + "\t");
 			}
 			System.out.println();
 		}
 	}
 
+	/**
+	 * Search for a goal state
+	 * @param currCoord
+	 */
 	public void learn(Coordinate currCoord){
-		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+		boolean explore = false; //check if we are exploring in which case we update qTable with move cost instead of the highest move cost
 		for(Coordinate c: board.terminalStates){ //check if on terminal state
 			if(currCoord.equals(c)){
-				System.out.println("Found Terminal State");
-				return; //return if terminal
+				return; //return if terminal state
 			}
 		}
-		board.printBoard();
-		Direction dir = calculateBestDirection(currCoord); // if not, make move
-		updateQTable(currCoord,dir);
+		Direction dir = null;
+		//Math.random() generates a value between 0.0 and 1.0, if that number is lower than sigmaPercent, we move in a random direction (exploration)
+		if(Math.random() <= epsilonPercent) {
+			explore = true; // we are exploring
+			int i = ThreadLocalRandom.current().nextInt(0, 4);
 
-		float highestFloat = currCoord.highestFloat();
+			//Move in a random direction
+			switch(i) {
+				case 0:
+					dir = Direction.UP;
+					break;
+				case 1:
+					dir = Direction.DOWN;
+					break;
+				case 2:
+					dir = Direction.RIGHT;
+					break;
+				case 3:
+					dir = Direction.LEFT;
+					break;
+			}
+		}
+		else {
+			dir = calculateBestDirection(currCoord); //get the best direction to move based on values in the board
+		}
+
+		//Clone the coordinate, add it to the board with the updated value
 		Coordinate newCoord = currCoord.clone();
-		if(currCoord.getType() != CoordinateType.TERMINAL) {
-			newCoord.value = highestFloat;
-			this.board.board[currCoord.row][currCoord.col] = newCoord;
-			
+		if(explore) {
+			float moveFloat = calculateCoordinateValue(currCoord, dir); // cost for move with explore
+			if (currCoord.getType() != CoordinateType.TERMINAL) { // check if next move not terminal
+				newCoord.value = moveFloat; // update qTable
+				this.board.board[currCoord.row][currCoord.col] = newCoord; // save on coordinate board
+			}
+		}
+		else{
+			float highestFloat = currCoord.highestFloat(); // cost to move when not exploring (recording the best value)
+			if(currCoord.getType() != CoordinateType.TERMINAL) { // check if terminal state (doesnt make update if)
+				newCoord.value = highestFloat;  // save value as highest float
+				this.board.board[currCoord.row][currCoord.col] = newCoord; // update coordinate board
+			}
 		}
 
 
-		//todo - save new qMax float in table?
-		
-		System.out.println("Currently at: (" + currCoord.col + " " + currCoord.row + ") " + "Moving: " + dir);
+		//System.out.println("Currently at: (" + currCoord.col + " " + currCoord.row + ") " + "Moving: " + dir);
+
+		if(!explore) {
+			//chance to go in the not desired direction via randomness
+			double notDesiredDir = Math.random();
+			boolean left = false;//chance to go left of attempted direction
+			boolean right = false;//change to go right from attempted direction
+			double NotDesiredChance = (1 - probDesiredDirection) / 2; //individual chance to go left vs right
+			if (notDesiredDir <= NotDesiredChance) { // check if chance is between 0 and half of 1-the chance to go the right way
+				left = true;//goes left from attempted direction
+			} else if (notDesiredDir <= (2 * notDesiredDir)) { // checks if greater than half of 1-the chance to go the right way but less than the chance to go the right way
+				right = true;//goes right from attempted direction
+			}
+			if (left || right) {//if we are going either left of right from the desired direction
+				switch (dir) {
+					case UP:
+						if (left) {
+							dir = Direction.LEFT;
+						}
+						if (right) {
+							dir = Direction.RIGHT;
+						}
+						break;
+					case DOWN:
+						if (left) {
+							dir = Direction.RIGHT;
+						}
+						if (right) {
+							dir = Direction.LEFT;
+						}
+						break;
+					case LEFT:
+						if (left) {
+							dir = Direction.DOWN;
+						}
+						if (right) {
+							dir = Direction.UP;
+						}
+						break;
+					case RIGHT:
+						if (left) {
+							dir = Direction.UP;
+						}
+						if (right) {
+							dir = Direction.DOWN;
+						}
+						break;
+				}
+			}
+		}
+			//Check and make sure we haven't hit a boundary
 		switch(dir){
 	
 			case UP:
@@ -166,10 +259,16 @@ public class ReinforcementLearning {
 					learn(new Coordinate(currCoord.type, currCoord.col + 1, currCoord.row, board.board[currCoord.row][currCoord.col+1].value));
 				}
 				break;
+			default:
+				break;
 		}
 	}
-	
-	//Calculate which direction is the best direction to travel in
+
+	/**
+	 * Calculate which direction is the best direction to travel in
+	 * @param currCoord
+	 * @return dir
+	 */
 	private Direction calculateBestDirection(Coordinate currCoord) {
 	
 		Direction bestDir = null;
@@ -208,48 +307,41 @@ public class ReinforcementLearning {
 //				bestDir = dir;
 //			}
 //		}
-		
-		//If the random value is high enough, just go in any random direction
-		Random rand = new Random();
-		
-		//Math.random() generates a value between 0.0 and 1.0, if that number is lower than sigmaPercent, we move in a random direction (exploration)
-		if(Math.random() <= sigmaPercent) {
-			int i = ThreadLocalRandom.current().nextInt(0, 4);
-
-			//Move in a random direction
-			switch(i) {
-			case 0:
-				bestDir = Direction.UP;
-				break;
-			case 1:
-				bestDir = Direction.DOWN;
-				break;
-			case 2:
-				bestDir = Direction.RIGHT;
-				break;
-			case 3:
-				bestDir = Direction.LEFT;
-				break;
-			}				
-		}
+//
+//		//If the random value is high enough, just go in any random direction
+//		Random rand = new Random();
+//
+//		//Math.random() generates a value between 0.0 and 1.0, if that number is lower than sigmaPercent, we move in a random direction (exploration)
+//		if(Math.random() <= sigmaPercent) {
+//			int i = ThreadLocalRandom.current().nextInt(0, 4);
+//
+//			//Move in a random direction
+//			switch(i) {
+//			case 0:
+//				bestDir = Direction.UP;
+//				break;
+//			case 1:
+//				bestDir = Direction.DOWN;
+//				break;
+//			case 2:
+//				bestDir = Direction.RIGHT;
+//				break;
+//			case 3:
+//				bestDir = Direction.LEFT;
+//				break;
+//			}
+//		}
 		
 		return bestDir;
 		
 	}
 
-	public void initializeQtable(){
-		int height = this.board.height;
-		int width = this.board.width;
-
-		for (int i = 0; i < width; i++) {
-			for (int j = 0; j < height; j++) {
-				int key[] = {i,j};
-				float values[] = {0,0,0,0};
-				qTable.put(key,values);
-			}
-		}
-	}
-
+	/**
+	 * Calculate the highest coordinate value
+	 * @param currCoord
+	 * @param dir
+	 * @return value
+	 */
 	private float calculateCoordinateValue(Coordinate currCoord, Direction dir) {
 		
 		//Initialize points
@@ -296,14 +388,14 @@ public class ReinforcementLearning {
 			rightVal = constantReward + currCoord.getValue();
 		}
 		
-		System.out.println("\nDir " + dir);
+		//System.out.println("\nDir " + dir);
 
-		System.out.println("topVal " + topVal);
-		System.out.println("bottomVal " + bottomVal);
-		System.out.println("leftVal " + leftVal);
-		System.out.println("rightVal " + rightVal);
+		//System.out.println("topVal " + topVal);
+		//System.out.println("bottomVal " + bottomVal);
+		//System.out.println("leftVal " + leftVal);
+		//System.out.println("rightVal " + rightVal);
 
-		System.out.println("\n\n");
+		//System.out.println("\n\n");
 
 		//Assign multiplication weights based on what direction we travel. (It is impossible to travel backwards)
 		switch(dir) {

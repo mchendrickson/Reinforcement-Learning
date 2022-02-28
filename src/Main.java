@@ -14,57 +14,52 @@ public class Main {
         float timeToRun = 0f, probDesiredDirection = 0f, constantReward = 0f;
 
         if (args.length != 4) {
-            System.out.println("An error occurred.");
-            System.out.println("Invalid input.");
-            System.out.println("Please input a filename, a learn time, the desired direction percentage, and a constant reward number. ");
-            System.exit(1);
-        }
-
-        if(Objects.equals(args[0], "board.txt")) {
-            try {
-                File board = new File("C:\\Users\\Josh\\Documents\\CS4341Assignment4\\Boards\\board.txt");
-                BoardGenerator board1 = new BoardGenerator();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        	errorAndExit();
         }
 
         try {
             timeToRun = Float.parseFloat(args[1]);
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid input.");
-            System.out.println("Please input a filename, a learn time, the desired direction percentage, and a constant reward number. ");
-            System.exit(1);
-        }
-        try {
             probDesiredDirection = Float.parseFloat(args[2]);
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid input.");
-            System.out.println("Please input a filename, a learn time, the desired direction percentage, and a constant reward number. ");
-            System.exit(1);
-        }
-        try {
             constantReward = Float.parseFloat(args[3]);
         } catch (NumberFormatException e) {
-            System.out.println("Invalid input.");
-            System.out.println("Please input a filename, a learn time, the desired direction percentage, and a constant reward number. ");
-            System.exit(1);
+        	errorAndExit();
         }
 
-
-//		float timeToRun = 10;
-//		float probDesiredDirection = 0.8f;
-//		float constantReward = -0.05f;
-        float sigmaPercent = 0.1f;
+        //Probability of moving a random direction
+        float epsilonPercent = 0.1f;
 
         openFile(args[0]);
-        //printBoard(boardFile);
+        printBoard(boardFile);
+        
+        System.out.println();
+        
         Board b = new Board(boardHeight, boardWidth, boardFile);
-
-        ReinforcementLearning learning = new ReinforcementLearning(b, timeToRun, probDesiredDirection, constantReward, sigmaPercent);
+        System.out.println("Running board of height: " + boardHeight + ", width " + boardWidth + " for " + timeToRun + " seconds ");
+        System.out.println("Accuracy: " + probDesiredDirection * 100 + "%");
+        System.out.println("Epsilon: " + epsilonPercent * 100 + "%"); 
+        System.out.println("Constant reward: " + constantReward);
+        
+        System.out.println();
+        
+        ReinforcementLearning learning = new ReinforcementLearning(b, timeToRun, probDesiredDirection, constantReward, epsilonPercent);
+        
+        System.out.println();
     }
 
+    /**
+     * Print error messages then crash
+     */
+    private static void errorAndExit() {
+    	 System.out.println("Invalid input.");
+         System.out.println("Please input a filename, a learn time, the desired direction percentage, and a constant reward number. ");
+         System.exit(1);
+    }
 
+    /**
+     * Open and read the file, add it to a double array of Integers
+     * @param fileName
+     * @throws FileNotFoundException
+     */
     private static void openFile(String fileName) throws FileNotFoundException {
 
         File myObj = new File(fileName);
@@ -93,6 +88,10 @@ public class Main {
         myReader.close();
     }
 
+    /**
+     * Print the formatted board in text
+     * @param boardFile
+     */
     private static void printBoard(Integer[][] boardFile) {
         for (int i = 0; i < boardFile.length; i++) {
             for (int j = 0; j < boardFile[i].length; j++) {

@@ -10,6 +10,17 @@ public class Coordinate implements Cloneable{
     float rightCost;
     float downCost;
 
+    /**
+     * Create a coordinate with all the required data
+     * @param type
+     * @param colCoordinate
+     * @param rowCoordinate
+     * @param value
+     * @param upCost
+     * @param leftCost
+     * @param rightCost
+     * @param downCost
+     */
     public Coordinate(CoordinateType type, int colCoordinate, int rowCoordinate, float value, float upCost, float leftCost, float rightCost, float downCost) {
         this.type = type;
         this.col = colCoordinate;
@@ -21,6 +32,10 @@ public class Coordinate implements Cloneable{
         this.downCost = downCost;
     }
 
+    /**
+     * Get the highest value of each of the move costs
+     * @return highestValue
+     */
     public float highestFloat(){
         float currHighest = this.upCost;
         if(currHighest < this.downCost){
@@ -35,6 +50,10 @@ public class Coordinate implements Cloneable{
         return currHighest;
     }
 
+    /**
+     * Get the best direction to travel in based on values
+     * @return
+     */
     public Direction highestDir(){
         Direction currHighestDir = Direction.UP;
         float currHighest = this.upCost;
@@ -53,6 +72,13 @@ public class Coordinate implements Cloneable{
         return currHighestDir;
     }
 
+    /**
+     * For terminal state coordinates which don't need directional costs
+     * @param type
+     * @param colCoordinate
+     * @param rowCoordinate
+     * @param value
+     */
     public Coordinate(CoordinateType type, int colCoordinate, int rowCoordinate, float value) {
         this.type = type;
         this.col = colCoordinate;
@@ -60,81 +86,152 @@ public class Coordinate implements Cloneable{
         this.value = value;
     }
 
+    /**
+     * Getter for type of coordinate
+     * @return TERMINAL or CURRENT
+     */
     public CoordinateType getType() {
         return type;
     }
 
-    public int getcolCoordinate() {
+    /**
+     * @return X coordinate
+     */
+    public int getColCoordinate() {
         return col;
     }
 
-    public int getyCoordinate() {
+    /**
+     * @return Y coordinate
+     */
+    public int getRowCoordinate() {
         return row;
     }
 
+    /**
+     * Value of specific coordinate
+     * @return value
+     */
     public float getValue() {
         return value;
     }
 
+    /**
+     * Value of up cost
+     * @return value
+     */
     public float getUpCost() {
         return upCost;
     }
 
+    /**
+     * Value of left cost
+     * @return value
+     */
     public float getLeftCost() {
         return leftCost;
     }
 
+    /**
+     * Value of right cost
+     * @return value
+     */
     public float getRightCost() {
         return rightCost;
     }
 
+    /**
+     * Value of down cost
+     * @return value
+     */
     public float getDownCost() {
         return downCost;
     }
 
+    /**
+     * Set TERMINAL or CURRENT
+     */
     public void setType(CoordinateType type) {
         this.type = type;
     }
 
-    public void setcolCoordinate(int colCoordinate) {
+    /**
+     * Set X coordinate
+     * @param colCoordinate
+     */
+    public void setColCoordinate(int colCoordinate) {
         this.col = colCoordinate;
     }
 
-    public void setyCoordinate(int rowCoordinate) {
+    /**
+     * Set Y coordinate
+     * @param rowCoordinate
+     */
+    public void setRowCoordinate(int rowCoordinate) {
         this.row = rowCoordinate;
     }
 
+    /**
+     * Set value
+     * @param value
+     */
     public void setValue(Integer value) {
         this.value = value;
     }
-
+    
+    /**
+     * Set up cost
+     * @param upCost
+     */
     public void setUpCost(float upCost) {
         this.upCost = upCost;
     }
 
+    /**
+     * Set left cost
+     * @param leftCost
+     */
     public void setLeftCost(float leftCost) {
         this.leftCost = leftCost;
     }
 
+    /**
+     * Set right cost
+     * @param rightCost
+     */
     public void setRightCost(float rightCost) {
         this.rightCost = rightCost;
     }
 
+    /**
+     * Set down cost
+     * @param downCost
+     */
     public void setDownCost(float downCost) {
         this.downCost = downCost;
     }
 
-
+    /**
+     * Check if two coordinates have the same position
+     * @param o
+     * @return true/false
+     */
     public boolean equals(Coordinate o) {
         return (this.col == o.col && this.row == o.row);
     }
 
     @Override
+    /**
+     * Get the hash
+     */
     public int hashCode() {
         return Objects.hash(col, row, value);
     }
 
     @Override
+    /**
+     * Deep clone the coordinate to another
+     */
     public Coordinate clone() {
         return new Coordinate(type, col, row, value, upCost, leftCost, rightCost, downCost);
     }
