@@ -50,7 +50,7 @@ public class ReinforcementLearning {
 	public Coordinate calculateCosts(Coordinate currCoord){
 
 		Point top, bottom, left, right;
-		float alpha = (float) 0.10;
+		float alpha = (float) 0.5;
 		top = new Point(currCoord.col, currCoord.row - 1);
 		bottom = new Point(currCoord.col, currCoord.row + 1);
 		left = new Point(currCoord.col - 1, currCoord.row);
@@ -61,29 +61,28 @@ public class ReinforcementLearning {
 		float downCost;
 
 		if(left.x >= 0) {
-			currCoord.leftCost = currCoord.leftCost + (alpha * (constantReward + board.getBoard()[currCoord.row][currCoord.col - 1].value - currCoord.leftCost));
+
+			currCoord.leftCost = currCoord.leftCost + (alpha * (constantReward + 1*(board.getBoard()[currCoord.row][currCoord.col - 1].value - currCoord.leftCost)));
 		}else{
 			currCoord.leftCost = constantReward;
 		}
-
-
 		if(right.x < board.width) {
 
-			currCoord.rightCost = currCoord.rightCost + (alpha * (constantReward + board.getBoard()[currCoord.row][currCoord.col + 1].value - currCoord.rightCost));
+			currCoord.rightCost = currCoord.rightCost + (alpha * (constantReward + 1*(board.getBoard()[currCoord.row][currCoord.col + 1].value - currCoord.rightCost)));
 		}else{
 			currCoord.rightCost = constantReward;
 		}
 
 		if(top.y >= 0) {
 
-			currCoord.upCost = currCoord.upCost + (alpha * (constantReward + board.getBoard()[currCoord.row - 1][currCoord.col].value - currCoord.upCost));
+			currCoord.upCost = currCoord.upCost + (alpha * (constantReward + 1 * (board.getBoard()[currCoord.row - 1][currCoord.col].value - currCoord.upCost)));
 		}else{
 			currCoord.upCost = constantReward;
 		}
 
 		if(bottom.y < board.height) {
 
-			currCoord.downCost = currCoord.downCost + (alpha * (constantReward + 1 * (board.getBoard()[currCoord.row + 1][currCoord.col].value) - currCoord.downCost));
+			currCoord.downCost = currCoord.downCost + (alpha * (constantReward + 1 * (board.getBoard()[currCoord.row + 1][currCoord.col].value - currCoord.downCost)));
 		}else{
 			currCoord.downCost = constantReward;
 		}
