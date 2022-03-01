@@ -1,4 +1,5 @@
 import java.awt.Point;
+import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.HashMap;
@@ -7,6 +8,8 @@ public class ReinforcementLearning {
 	private Board board;
 	private Timer timer;
 	private float probDesiredDirection, constantReward, epsilonPercent;
+	private int sameMove;
+	private String lastMove;
 
 	/**
 	 * Constructor for ReinforcementLearning
@@ -239,9 +242,19 @@ public class ReinforcementLearning {
 		}
 		//Check and make sure we haven't hit a boundary
 		Coordinate nextCoord = currCoord.clone();
+		if(sameMove > board.height + 1){
+			return;
+		}
 		switch (dir) {
 
 			case UP:
+				if(Objects.equals(lastMove, "UP")){
+					sameMove++;
+				}
+				if((Objects.equals(lastMove, "RIGHT")) || (Objects.equals(lastMove, "LEFT")) || (Objects.equals(lastMove, "DOWN"))){
+					sameMove = 0;
+				}
+				lastMove = "UP";
 				if (currCoord.row == 0) { // check if at top bound
 
 					learn(nextCoord);
@@ -252,6 +265,13 @@ public class ReinforcementLearning {
 				}
 				break;
 			case DOWN:
+				if(Objects.equals(lastMove, "DOWN")){
+					sameMove++;
+				}
+				if((Objects.equals(lastMove, "RIGHT")) || (Objects.equals(lastMove, "LEFT")) || (Objects.equals(lastMove, "UP"))){
+					sameMove = 0;
+				}
+				lastMove = "DOWN";
 				if (currCoord.row == board.height - 1) { // check if at bottom bound
 
 					learn(nextCoord);
@@ -262,6 +282,13 @@ public class ReinforcementLearning {
 				}
 				break;
 			case LEFT:
+				if(Objects.equals(lastMove, "LEFT")){
+					sameMove++;
+				}
+				if((Objects.equals(lastMove, "RIGHT")) || (Objects.equals(lastMove, "UP")) || (Objects.equals(lastMove, "DOWN"))){
+					sameMove = 0;
+				}
+				lastMove = "LEFT";
 				if (currCoord.col == 0) { // check if at left bound
 
 					learn(nextCoord);
@@ -271,6 +298,13 @@ public class ReinforcementLearning {
 				}
 				break;
 			case RIGHT:
+				if(Objects.equals(lastMove, "RIGHT")){
+					sameMove++;
+				}
+				if((Objects.equals(lastMove, "UP")) || (Objects.equals(lastMove, "LEFT")) || (Objects.equals(lastMove, "DOWN"))){
+					sameMove = 0;
+				}
+				lastMove = "RIGHT";
 				if (currCoord.col == board.width - 1) { // check if at right bound
 
 					learn(nextCoord);
