@@ -43,6 +43,7 @@ public class ReinforcementLearning {
 			//System.out.println("Starting at: (" + randomXCoordinate + " " + randomYCoordinate + ")");
 
 			Coordinate currentCoordinate = board.board[randomYCoordinate][randomXCoordinate];
+			sameMove = 0;
 			learn(currentCoordinate);
 		}
 		while(!timer.finished());
