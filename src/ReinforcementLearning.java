@@ -48,7 +48,6 @@ public class ReinforcementLearning {
 	}
 
 	public Coordinate calculateCosts(Coordinate currCoord){
-		Coordinate nextCoord = null;
 
 		Point top, bottom, left, right;
 		float alpha = (float) 0.10;
@@ -56,26 +55,38 @@ public class ReinforcementLearning {
 		bottom = new Point(currCoord.col, currCoord.row + 1);
 		left = new Point(currCoord.col - 1, currCoord.row);
 		right = new Point(currCoord.col + 1, currCoord.row);
-				if(left.x >= 0) {
-					nextCoord = board.getBoard()[currCoord.row][currCoord.col - 1];
-					currCoord.leftCost = currCoord.leftCost + (alpha * (constantReward + nextCoord.value - currCoord.leftCost));
-				}
+		float upCost;
+		float leftCost;
+		float rightCost;
+		float downCost;
+
+		if(left.x >= 0) {
+			currCoord.leftCost = currCoord.leftCost + (alpha * (constantReward + board.getBoard()[currCoord.row][currCoord.col - 1].value - currCoord.leftCost));
+		}else{
+			currCoord.leftCost = constantReward;
+		}
 
 
-				if(right.x < board.width) {
-					nextCoord = board.getBoard()[currCoord.row][currCoord.col + 1];
-					currCoord.rightCost = currCoord.rightCost + (alpha * (constantReward + nextCoord.value - currCoord.rightCost));
-				}
+		if(right.x < board.width) {
 
-				if(top.y >= 0) {
-					nextCoord = board.getBoard()[currCoord.row - 1][currCoord.col];
-					currCoord.upCost = currCoord.upCost + (alpha * (constantReward + nextCoord.value - currCoord.upCost));
-				}
+			currCoord.rightCost = currCoord.rightCost + (alpha * (constantReward + board.getBoard()[currCoord.row][currCoord.col + 1].value - currCoord.rightCost));
+		}else{
+			currCoord.rightCost = constantReward;
+		}
 
-				if(bottom.y < board.height) {
-					nextCoord = board.getBoard()[currCoord.row + 1][currCoord.col];
-					currCoord.downCost = currCoord.downCost + (alpha * (constantReward + 1 * (nextCoord.value) - currCoord.downCost));
-				}
+		if(top.y >= 0) {
+
+			currCoord.upCost = currCoord.upCost + (alpha * (constantReward + board.getBoard()[currCoord.row - 1][currCoord.col].value - currCoord.upCost));
+		}else{
+			currCoord.upCost = constantReward;
+		}
+
+		if(bottom.y < board.height) {
+
+			currCoord.downCost = currCoord.downCost + (alpha * (constantReward + 1 * (board.getBoard()[currCoord.row + 1][currCoord.col].value) - currCoord.downCost));
+		}else{
+			currCoord.downCost = constantReward;
+		}
 
 
 		return currCoord;
@@ -280,7 +291,7 @@ public class ReinforcementLearning {
 	 * @return dir
 	 */
 	private Direction calculateBestDirection(Coordinate currCoord) {
-	
+
 		Direction bestDir = null;
 		float highestValue = currCoord.highestFloat();
 		if(currCoord.leftCost == highestValue){
