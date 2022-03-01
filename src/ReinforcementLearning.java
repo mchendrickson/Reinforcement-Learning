@@ -136,21 +136,21 @@ public class ReinforcementLearning {
 	 * Search for a goal state
 	 * @param currCoord
 	 */
-	public void learn(Coordinate currCoord){
+	public void learn(Coordinate currCoord) {
 		boolean explore = false; //check if we are exploring in which case we update qTable with move cost instead of the highest move cost
-		for(Coordinate c: board.terminalStates){ //check if on terminal state
-			if(currCoord.equals(c)){
+		for (Coordinate c : board.terminalStates) { //check if on terminal state
+			if (currCoord.equals(c)) {
 				return; //return if terminal state
 			}
 		}
 		Direction dir = null;
 		//Math.random() generates a value between 0.0 and 1.0, if that number is lower than sigmaPercent, we move in a random direction (exploration)
-		if(Math.random() <= epsilonPercent) {
+		if (Math.random() <= epsilonPercent) {
 			explore = true; // we are exploring
 			int i = ThreadLocalRandom.current().nextInt(0, 4);
 
 			//Move in a random direction
-			switch(i) {
+			switch (i) {
 				case 0:
 					dir = Direction.UP;
 					break;
@@ -164,25 +164,23 @@ public class ReinforcementLearning {
 					dir = Direction.LEFT;
 					break;
 			}
-		}
-		else {
+		} else {
 			dir = calculateBestDirection(currCoord); //get the best direction to move based on values in the board
 		}
 		System.out.println();
 		board.printBoard();
 		//Clone the coordinate, add it to the board with the updated value
 		Coordinate newCoord = currCoord.clone();
-		if(explore) {
+		if (explore) {
 			newCoord = calculateCosts(newCoord);
 			float highestFloat = currCoord.highestFloat(); // cost for move with explore
 			if (currCoord.getType() != CoordinateType.TERMINAL) { // check if next move not terminal
 				newCoord.value = highestFloat; // update qTable
 				this.board.board[currCoord.row][currCoord.col] = newCoord; // save on coordinate board
 			}
-		}
-		else{
+		} else {
 			float highestFloat = currCoord.highestFloat(); // cost to move when not exploring (recording the best value)
-			if(currCoord.getType() != CoordinateType.TERMINAL) { // check if terminal state (doesnt make update if)
+			if (currCoord.getType() != CoordinateType.TERMINAL) { // check if terminal state (doesnt make update if)
 				newCoord.value = highestFloat;  // save value as highest float
 				this.board.board[currCoord.row][currCoord.col] = newCoord; // update coordinate board
 			}
@@ -191,7 +189,7 @@ public class ReinforcementLearning {
 
 		System.out.println("Currently at: (" + currCoord.col + " " + currCoord.row + ") " + "Moving: " + dir);
 
-		if(!explore) {
+		if (!explore) {
 			//chance to go in the not desired direction via randomness
 			double notDesiredDir = Math.random();
 			boolean left = false;//chance to go left of attempted direction
@@ -239,43 +237,46 @@ public class ReinforcementLearning {
 				}
 			}
 		}
-			//Check and make sure we haven't hit a boundary
-		switch(dir){
-	
+		//Check and make sure we haven't hit a boundary
+		Coordinate nextCoord = currCoord.clone();
+		switch (dir) {
+
 			case UP:
-				if(currCoord.row == 0){ // check if at top bound
-					learn(new Coordinate(currCoord.type, currCoord.col, currCoord.row, board.board[currCoord.row][currCoord.col].value));
+				if (currCoord.row == 0) { // check if at top bound
+
+					learn(nextCoord);
 					break;
-				}
-				else{
-					learn(new Coordinate(currCoord.type, currCoord.col, currCoord.row - 1, board.board[currCoord.row-1][currCoord.col].value));
+				} else {
+
+					learn(board.board[currCoord.row - 1][currCoord.col]);
 				}
 				break;
 			case DOWN:
-				if(currCoord.row == board.height - 1){ // check if at bottom bound
-					learn(new Coordinate(currCoord.type, currCoord.col, currCoord.row, board.board[currCoord.row][currCoord.col].value));
+				if (currCoord.row == board.height - 1) { // check if at bottom bound
+
+					learn(nextCoord);
 					break;
-				}
-				else{
-					learn(new Coordinate(currCoord.type, currCoord.col, currCoord.row + 1, board.board[currCoord.row+1][currCoord.col].value));
+				} else {
+
+					learn(board.board[currCoord.row + 1][currCoord.col]);
 				}
 				break;
 			case LEFT:
-				if(currCoord.col == 0){ // check if at left bound
-					learn(new Coordinate(currCoord.type, currCoord.col, currCoord.row, board.board[currCoord.row][currCoord.col].value));
+				if (currCoord.col == 0) { // check if at left bound
+
+					learn(nextCoord);
 					break;
-				}
-				else{
-					learn(new Coordinate(currCoord.type, currCoord.col - 1, currCoord.row, board.board[currCoord.row][currCoord.col-1].value));
+				} else {
+					learn(board.board[currCoord.row][currCoord.col - 1]);
 				}
 				break;
 			case RIGHT:
-				if(currCoord.col == board.width - 1){ // check if at right bound
-					learn(new Coordinate(currCoord.type, currCoord.col, currCoord.row, board.board[currCoord.row][currCoord.col].value));
+				if (currCoord.col == board.width - 1) { // check if at right bound
+
+					learn(nextCoord);
 					break;
-				}
-				else{
-					learn(new Coordinate(currCoord.type, currCoord.col + 1, currCoord.row, board.board[currCoord.row][currCoord.col+1].value));
+				} else {
+					learn(board.board[currCoord.row][currCoord.col + 1]);
 				}
 				break;
 			default:

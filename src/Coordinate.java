@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class Coordinate implements Cloneable{
@@ -39,15 +40,16 @@ public class Coordinate implements Cloneable{
      * @return highestValue
      */
     public float highestFloat(){
-        float currHighest = this.upCost;
-        if(currHighest < this.downCost){
-            currHighest = this.downCost;
-        }
-        if(currHighest < this.rightCost){
-            currHighest = this.rightCost;
-        }
-        if (currHighest < this.leftCost) {
-            currHighest = this.leftCost;
+        ArrayList<Float> floats = new ArrayList<>();
+        floats.add(this.leftCost);
+        floats.add(this.upCost);
+        floats.add(this.downCost);
+        floats.add(this.rightCost);
+        float currHighest = Float.NEGATIVE_INFINITY;
+        for(float f : floats){
+            if(Float.compare(currHighest,f) < 0){
+                currHighest = f;
+            }
         }
         return currHighest;
     }
