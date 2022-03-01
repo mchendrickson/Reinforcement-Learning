@@ -38,9 +38,8 @@ public class ReinforcementLearning {
 			int randomYCoordinate = ThreadLocalRandom.current().nextInt(0, board.height);
 			
 			//System.out.println("Starting at: (" + randomXCoordinate + " " + randomYCoordinate + ")");
-			
-			Integer initCordValue = board.boardInt[randomYCoordinate][randomXCoordinate];
-			Coordinate currentCoordinate = new Coordinate(CoordinateType.CURRENT, randomXCoordinate,randomYCoordinate,initCordValue);
+
+			Coordinate currentCoordinate = board.board[randomYCoordinate][randomXCoordinate];
 			learn(currentCoordinate);
 		}
 		while(!timer.finished());
@@ -50,7 +49,7 @@ public class ReinforcementLearning {
 	public Coordinate calculateCosts(Coordinate currCoord){
 
 		Point top, bottom, left, right;
-		float alpha = (float) 0.5;
+		float alpha = (float) 0.1;
 		top = new Point(currCoord.col, currCoord.row - 1);
 		bottom = new Point(currCoord.col, currCoord.row + 1);
 		left = new Point(currCoord.col - 1, currCoord.row);
@@ -62,29 +61,29 @@ public class ReinforcementLearning {
 
 		if(left.x >= 0) {
 
-			currCoord.leftCost = currCoord.leftCost + (alpha * (constantReward + 1*(board.getBoard()[currCoord.row][currCoord.col - 1].value - currCoord.leftCost)));
+			currCoord.leftCost += (alpha * (constantReward + 1*(board.getBoard()[currCoord.row][currCoord.col - 1].value - currCoord.leftCost)));
 		}else{
-			currCoord.leftCost = constantReward;
+			currCoord.leftCost += (alpha * (constantReward + 1*(board.getBoard()[currCoord.row][currCoord.col].value - currCoord.leftCost)));
 		}
 		if(right.x < board.width) {
 
-			currCoord.rightCost = currCoord.rightCost + (alpha * (constantReward + 1*(board.getBoard()[currCoord.row][currCoord.col + 1].value - currCoord.rightCost)));
+			currCoord.rightCost += (alpha * (constantReward + 1*(board.getBoard()[currCoord.row][currCoord.col + 1].value - currCoord.rightCost)));
 		}else{
-			currCoord.rightCost = constantReward;
+			currCoord.rightCost += (alpha * (constantReward + 1*(board.getBoard()[currCoord.row][currCoord.col].value - currCoord.rightCost)));
 		}
 
 		if(top.y >= 0) {
 
-			currCoord.upCost = currCoord.upCost + (alpha * (constantReward + 1 * (board.getBoard()[currCoord.row - 1][currCoord.col].value - currCoord.upCost)));
+			currCoord.upCost += (alpha * (constantReward + 1 * (board.getBoard()[currCoord.row - 1][currCoord.col].value - currCoord.upCost)));
 		}else{
-			currCoord.upCost = constantReward;
+			currCoord.upCost += (alpha * (constantReward + 1 * (board.getBoard()[currCoord.row][currCoord.col].value - currCoord.upCost)));
 		}
 
 		if(bottom.y < board.height) {
 
-			currCoord.downCost = currCoord.downCost + (alpha * (constantReward + 1 * (board.getBoard()[currCoord.row + 1][currCoord.col].value - currCoord.downCost)));
+			currCoord.downCost += (alpha * (constantReward + 1 * (board.getBoard()[currCoord.row + 1][currCoord.col].value - currCoord.downCost)));
 		}else{
-			currCoord.downCost = constantReward;
+			currCoord.downCost += (alpha * (constantReward + 1 * (board.getBoard()[currCoord.row][currCoord.col].value - currCoord.downCost)));
 		}
 
 
@@ -169,15 +168,15 @@ public class ReinforcementLearning {
 		else {
 			dir = calculateBestDirection(currCoord); //get the best direction to move based on values in the board
 		}
-		currCoord =calculateCosts(currCoord);
 		System.out.println();
 		board.printBoard();
 		//Clone the coordinate, add it to the board with the updated value
 		Coordinate newCoord = currCoord.clone();
 		if(explore) {
+			newCoord = calculateCosts(newCoord);
 			float highestFloat = currCoord.highestFloat(); // cost for move with explore
 			if (currCoord.getType() != CoordinateType.TERMINAL) { // check if next move not terminal
-				newCoord.value =  highestFloat; // update qTable
+				newCoord.value = highestFloat; // update qTable
 				this.board.board[currCoord.row][currCoord.col] = newCoord; // save on coordinate board
 			}
 		}
@@ -290,6 +289,7 @@ public class ReinforcementLearning {
 	 * @return dir
 	 */
 	private Direction calculateBestDirection(Coordinate currCoord) {
+		currCoord = calculateCosts(currCoord);
 
 		Direction bestDir = null;
 		float highestValue = currCoord.highestFloat();

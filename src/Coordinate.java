@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.text.DecimalFormat;
 import java.util.Objects;
 
 public class Coordinate implements Cloneable{
@@ -50,6 +51,30 @@ public class Coordinate implements Cloneable{
         }
         return currHighest;
     }
+    public boolean allSame(){
+        boolean returnType = false;
+        DecimalFormat df = new DecimalFormat();
+        df.setMaximumFractionDigits(2);
+        float left, right, up, down;
+        left = this.leftCost;
+        df.format(left);
+        right = this.rightCost;
+        df.format(right);
+        up = this.upCost;
+        df.format(up);
+        down = this.downCost;
+        df.format(down);
+
+        if(left == right){
+            if(left == up){
+                if(left == down){
+                    returnType = true;
+                }
+            }
+        }
+
+        return returnType;
+    }
 
     /**
      * Get the best direction to travel in based on values
@@ -85,6 +110,14 @@ public class Coordinate implements Cloneable{
         this.col = colCoordinate;
         this.row = rowCoordinate;
         this.value = value;
+    }
+
+    public boolean allZero(){
+        boolean returnval = false;
+        if(this.downCost == 0 && this.leftCost == 0 && this.rightCost == 0 && this.upCost == 0){
+            returnval = true;
+        }
+        return returnval;
     }
 
     /**
