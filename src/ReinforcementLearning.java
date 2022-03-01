@@ -13,6 +13,7 @@ public class ReinforcementLearning {
 
 	/**
 	 * Constructor for ReinforcementLearning
+	 *
 	 * @param board
 	 * @param timeToRun
 	 * @param probDesiredDirection
@@ -29,28 +30,28 @@ public class ReinforcementLearning {
 
 		runReinforcement();
 	}
-	
+
 	/**
 	 * Method that runs for as long as the timer is set and calls learn, the method that updates the board values
 	 */
 	public void runReinforcement() {
 
 		do {
-			
+
 			int randomXCoordinate = ThreadLocalRandom.current().nextInt(0, board.width);
 			int randomYCoordinate = ThreadLocalRandom.current().nextInt(0, board.height);
-			
+
 			//System.out.println("Starting at: (" + randomXCoordinate + " " + randomYCoordinate + ")");
 
 			Coordinate currentCoordinate = board.board[randomYCoordinate][randomXCoordinate];
 			sameMove = 0;
 			learn(currentCoordinate);
 		}
-		while(!timer.finished());
+		while (!timer.finished());
 		finalPrint();
 	}
 
-	public Coordinate calculateCosts(Coordinate currCoord){
+	public Coordinate calculateCosts(Coordinate currCoord) {
 
 		Point top, bottom, left, right;
 		float alpha = (float) 0.1;
@@ -63,30 +64,30 @@ public class ReinforcementLearning {
 		float rightCost;
 		float downCost;
 
-		if(left.x >= 0) {
+		if (left.x >= 0) {
 
-			currCoord.leftCost += (alpha * (constantReward + 1*(board.getBoard()[currCoord.row][currCoord.col - 1].value - currCoord.leftCost)));
-		}else{
-			currCoord.leftCost += (alpha * (constantReward + 1*(board.getBoard()[currCoord.row][currCoord.col].value - currCoord.leftCost)));
+			currCoord.leftCost += (alpha * (constantReward + 1 * (board.getBoard()[currCoord.row][currCoord.col - 1].value - currCoord.leftCost)));
+		} else {
+			currCoord.leftCost += (alpha * (constantReward + 1 * (board.getBoard()[currCoord.row][currCoord.col].value - currCoord.leftCost)));
 		}
-		if(right.x < board.width) {
+		if (right.x < board.width) {
 
-			currCoord.rightCost += (alpha * (constantReward + 1*(board.getBoard()[currCoord.row][currCoord.col + 1].value - currCoord.rightCost)));
-		}else{
-			currCoord.rightCost += (alpha * (constantReward + 1*(board.getBoard()[currCoord.row][currCoord.col].value - currCoord.rightCost)));
+			currCoord.rightCost += (alpha * (constantReward + 1 * (board.getBoard()[currCoord.row][currCoord.col + 1].value - currCoord.rightCost)));
+		} else {
+			currCoord.rightCost += (alpha * (constantReward + 1 * (board.getBoard()[currCoord.row][currCoord.col].value - currCoord.rightCost)));
 		}
 
-		if(top.y >= 0) {
+		if (top.y >= 0) {
 
 			currCoord.upCost += (alpha * (constantReward + 1 * (board.getBoard()[currCoord.row - 1][currCoord.col].value - currCoord.upCost)));
-		}else{
+		} else {
 			currCoord.upCost += (alpha * (constantReward + 1 * (board.getBoard()[currCoord.row][currCoord.col].value - currCoord.upCost)));
 		}
 
-		if(bottom.y < board.height) {
+		if (bottom.y < board.height) {
 
 			currCoord.downCost += (alpha * (constantReward + 1 * (board.getBoard()[currCoord.row + 1][currCoord.col].value - currCoord.downCost)));
-		}else{
+		} else {
 			currCoord.downCost += (alpha * (constantReward + 1 * (board.getBoard()[currCoord.row][currCoord.col].value - currCoord.downCost)));
 		}
 
@@ -98,19 +99,19 @@ public class ReinforcementLearning {
 	/**
 	 * Prints the final result (with arrows)
 	 */
-	public void finalPrint(){
+	public void finalPrint() {
 		String[][] finalPrint = new String[board.height][board.width];
-		for(int row = 0; row < board.height; row++) {
-			for(int col = 0; col < board.width; col++) {
+		for (int row = 0; row < board.height; row++) {
+			for (int col = 0; col < board.width; col++) {
 				Coordinate printCoord = board.board[row][col];
 				Direction printDir = printCoord.highestDir();
 				CoordinateType type = printCoord.type;
-				switch(type){
+				switch (type) {
 					case TERMINAL:
-						finalPrint[row][col] = String.valueOf((int)printCoord.value);
+						finalPrint[row][col] = String.valueOf((int) printCoord.value);
 						break;
 					case CURRENT:
-						switch (printDir){
+						switch (printDir) {
 							case UP:
 								finalPrint[row][col] = "^";
 								break;
@@ -128,8 +129,8 @@ public class ReinforcementLearning {
 				}
 			}
 		}
-		for(String[] s: finalPrint){
-			for(String s1 : s){
+		for (String[] s : finalPrint) {
+			for (String s1 : s) {
 				System.out.print(s1 + "\t");
 			}
 			System.out.println();
@@ -138,6 +139,7 @@ public class ReinforcementLearning {
 
 	/**
 	 * Search for a goal state
+	 *
 	 * @param currCoord
 	 */
 	public void learn(Coordinate currCoord) {
@@ -243,16 +245,16 @@ public class ReinforcementLearning {
 		}
 		//Check and make sure we haven't hit a boundary
 		Coordinate nextCoord = currCoord.clone();
-		if(sameMove > board.height + 1){
+		if (sameMove > board.height + 1) {
 			return;
 		}
 		switch (dir) {
 
 			case UP:
-				if(Objects.equals(lastMove, "UP")){
+				if (Objects.equals(lastMove, "UP")) {
 					sameMove++;
 				}
-				if((Objects.equals(lastMove, "RIGHT")) || (Objects.equals(lastMove, "LEFT")) || (Objects.equals(lastMove, "DOWN"))){
+				if ((Objects.equals(lastMove, "RIGHT")) || (Objects.equals(lastMove, "LEFT")) || (Objects.equals(lastMove, "DOWN"))) {
 					sameMove = 0;
 				}
 				lastMove = "UP";
@@ -266,10 +268,10 @@ public class ReinforcementLearning {
 				}
 				break;
 			case DOWN:
-				if(Objects.equals(lastMove, "DOWN")){
+				if (Objects.equals(lastMove, "DOWN")) {
 					sameMove++;
 				}
-				if((Objects.equals(lastMove, "RIGHT")) || (Objects.equals(lastMove, "LEFT")) || (Objects.equals(lastMove, "UP"))){
+				if ((Objects.equals(lastMove, "RIGHT")) || (Objects.equals(lastMove, "LEFT")) || (Objects.equals(lastMove, "UP"))) {
 					sameMove = 0;
 				}
 				lastMove = "DOWN";
@@ -283,10 +285,10 @@ public class ReinforcementLearning {
 				}
 				break;
 			case LEFT:
-				if(Objects.equals(lastMove, "LEFT")){
+				if (Objects.equals(lastMove, "LEFT")) {
 					sameMove++;
 				}
-				if((Objects.equals(lastMove, "RIGHT")) || (Objects.equals(lastMove, "UP")) || (Objects.equals(lastMove, "DOWN"))){
+				if ((Objects.equals(lastMove, "RIGHT")) || (Objects.equals(lastMove, "UP")) || (Objects.equals(lastMove, "DOWN"))) {
 					sameMove = 0;
 				}
 				lastMove = "LEFT";
@@ -299,10 +301,10 @@ public class ReinforcementLearning {
 				}
 				break;
 			case RIGHT:
-				if(Objects.equals(lastMove, "RIGHT")){
+				if (Objects.equals(lastMove, "RIGHT")) {
 					sameMove++;
 				}
-				if((Objects.equals(lastMove, "UP")) || (Objects.equals(lastMove, "LEFT")) || (Objects.equals(lastMove, "DOWN"))){
+				if ((Objects.equals(lastMove, "UP")) || (Objects.equals(lastMove, "LEFT")) || (Objects.equals(lastMove, "DOWN"))) {
 					sameMove = 0;
 				}
 				lastMove = "RIGHT";
@@ -321,6 +323,7 @@ public class ReinforcementLearning {
 
 	/**
 	 * Calculate which direction is the best direction to travel in
+	 *
 	 * @param currCoord
 	 * @return dir
 	 */
@@ -329,132 +332,17 @@ public class ReinforcementLearning {
 
 		Direction bestDir = null;
 		float highestValue = currCoord.highestFloat();
-		if(currCoord.leftCost == highestValue){
+		if (currCoord.leftCost == highestValue) {
 			bestDir = Direction.LEFT;
-		}else if(currCoord.rightCost == highestValue){
+		} else if (currCoord.rightCost == highestValue) {
 			bestDir = Direction.RIGHT;
-		}else if(currCoord.upCost == highestValue){
+		} else if (currCoord.upCost == highestValue) {
 			bestDir = Direction.UP;
-		}else if(currCoord.downCost == highestValue){
+		} else if (currCoord.downCost == highestValue) {
 			bestDir = Direction.DOWN;
 		}
-		
+
 		return bestDir;
-		
+
 	}
-
-	/**
-	 * Calculate the highest coordinate value
-	 * @param currCoord
-	 * @param dir
-	 * @return value
-	 */
-	private float calculateCoordinateValue(Coordinate currCoord, Direction dir) {
-		
-		//Initialize points
-		Point top, bottom, left, right;
-		top = new Point(currCoord.col, currCoord.row - 1);
-		bottom = new Point(currCoord.col, currCoord.row + 1);
-		left = new Point(currCoord.col - 1, currCoord.row);
-		right = new Point(currCoord.col + 1, currCoord.row);
-		
-		//Total value of the coordinate locations
-		float topVal = 0; 
-		float bottomVal = 0;
-		float leftVal = 0;
-		float rightVal = 0;
-		
-		//Multipliers based on what direction we want to travel
-		double topValMult = 0; 
-		double bottomValMult = 0;
-		double leftValMult = 0;
-		double rightValMult = 0;
-		
-		//Get the value of the coordinate on the board. If it doesn't exist, simply return the cost to bounce back (the constant reward)
-		if(top.y >= 0) {
-			topVal = board.getBoard()[top.y][top.x].getValue();
-		}else {
-			topVal = constantReward + currCoord.getValue();
-		}
-		
-		if(bottom.y < board.height) {
-			bottomVal = board.getBoard()[bottom.y][bottom.x].getValue();
-		}else {
-			bottomVal = constantReward + currCoord.getValue();
-		}
-		
-		if(left.x >= 0) {
-			leftVal = board.getBoard()[left.y][left.x].getValue();
-		}else {
-			leftVal = constantReward + currCoord.getValue();
-		}
-		
-		if(right.x < board.width) {
-			rightVal = board.getBoard()[right.y][right.x].getValue();
-		}else {
-			rightVal = constantReward + currCoord.getValue();
-		}
-		
-		//System.out.println("\nDir " + dir);
-
-		//System.out.println("topVal " + topVal);
-		//System.out.println("bottomVal " + bottomVal);
-		//System.out.println("leftVal " + leftVal);
-		//System.out.println("rightVal " + rightVal);
-
-		//System.out.println("\n\n");
-
-		//Assign multiplication weights based on what direction we travel. (It is impossible to travel backwards)
-		switch(dir) {
-		
-		case UP:
-			topValMult = probDesiredDirection;
-			bottomValMult = 0;
-			leftValMult = (1.0 - probDesiredDirection) / 2;
-			rightValMult = (1.0 - probDesiredDirection) / 2;
-			break;
-		case DOWN:
-			topValMult = 0;
-			bottomValMult = probDesiredDirection;
-			leftValMult = (1.0 - probDesiredDirection) / 2;
-			rightValMult = (1.0 - probDesiredDirection) / 2;
-			break;
-		case LEFT:
-			topValMult = (1.0 - probDesiredDirection) / 2;
-			bottomValMult = (1.0 - probDesiredDirection) / 2;
-			leftValMult = probDesiredDirection;
-			rightValMult = 0;
-			break;
-		case RIGHT:
-			topValMult = (1.0 - probDesiredDirection) / 2;
-			bottomValMult = (1.0 - probDesiredDirection) / 2;
-			leftValMult = 0;
-			rightValMult = probDesiredDirection;
-			break;
-		}
-
-
-		//Calculate the total value
-		double totalValue = (topVal * topValMult) + (bottomVal * bottomValMult) + (rightVal * rightValMult) + (leftVal * leftValMult);
-		float returnValue = (float)(totalValue + constantReward);
-
-		switch(dir){
-			case UP:
-				currCoord.upCost = returnValue;
-				break;
-			case DOWN:
-				currCoord.downCost = returnValue;
-				break;
-			case LEFT:
-				currCoord.leftCost = returnValue;
-				break;
-			case RIGHT:
-				currCoord.rightCost = returnValue;
-				break;
-		}
-
-		//return the value + the cost of moving
-		return (float)(totalValue + constantReward);
-	}
-	
 }
