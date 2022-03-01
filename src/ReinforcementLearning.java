@@ -173,8 +173,7 @@ public class ReinforcementLearning {
 		} else {
 			dir = calculateBestDirection(currCoord); //get the best direction to move based on values in the board
 		}
-		System.out.println();
-		board.printBoard();
+
 		//Clone the coordinate, add it to the board with the updated value
 		Coordinate newCoord = currCoord.clone();
 		if (explore) {
@@ -191,9 +190,6 @@ public class ReinforcementLearning {
 				this.board.board[currCoord.row][currCoord.col] = newCoord; // update coordinate board
 			}
 		}
-
-
-		System.out.println("Currently at: (" + currCoord.col + " " + currCoord.row + ") " + "Moving: " + dir);
 
 		if (!explore) {
 			//chance to go in the not desired direction via randomness
